@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resource Planning Dashboard</title>
+    <title>ERP Hub Resource Planning Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -658,7 +658,7 @@
             <div class="logo">
                 <div class="logo-icon">📊</div>
                 <div>
-                    <div class="logo-text">Resource Planning Dashboard</div>
+                    <div class="logo-text">ERP Hub Resource Planning Dashboard</div>
                     <div class="logo-subtitle">Forward-Looking Capacity & Pipeline Analysis</div>
                 </div>
             </div>
@@ -797,17 +797,17 @@
                 </div>
             </section>
 
-            <!-- Row 2: Demand by Skill & FTE Gap -->
+            <!-- Row 2: Projected Revenue & FTE Gap -->
             <section class="charts-row">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
-                            <div class="chart-title">Demand by Skill</div>
-                            <div class="chart-subtitle">Required FTE by skill (probability-weighted)</div>
+                            <div class="chart-title">Projected Revenue</div>
+                            <div class="chart-subtitle">Monthly revenue forecast (probability-weighted)</div>
                         </div>
                     </div>
                     <div class="chart-container">
-                        <canvas id="demandBySkillChart"></canvas>
+                        <canvas id="projectedRevenueChart"></canvas>
                     </div>
                 </div>
                 <div class="chart-card">
@@ -1051,7 +1051,7 @@
             updateMetrics();
             renderPipelineChart();
             renderAggregateUtilChart();
-            renderDemandBySkillChart();
+            renderProjectedRevenueChart();
             renderSupplyDemandChart();
             renderUtilizationHeatmap();
             renderAvailableResourcesTable();
@@ -1171,7 +1171,7 @@
             if (charts.aggregateUtil) charts.aggregateUtil.destroy();
 
             const months = [...new Set(rawData.allocations.map(a => a.Month))].sort();
-            const totalCapacity = filteredData.resources.length * 100;
+            const totalCapacity = filteredData.resources.length * 100; // 100% per resource
 
             const demandByMonth = {};
             months.forEach(m => { demandByMonth[m] = 0; });
@@ -1182,9 +1182,12 @@
                 demandByMonth[a.Month] = (demandByMonth[a.Month] || 0) + (a.AllocationPercent * prob);
             });
 
-            const demandData = months.map(m => demandByMonth[m]);
-            const capacityData = months.map(() => totalCapacity);
-            const utilizationData = months.map(m => (demandByMonth[m] / totalCapacity) * 100);
+            // Calculate utilization as % of total capacity
+            const utilizationData = months.map(m => {
+                const util = (demandByMonth[m] / totalCapacity) * 100;
+                return Math.round(util * 10) / 10; // Round to 1 decimal
+            });
+            const targetLine = months.map(() => 100); // 100% target line
 
             charts.aggregateUtil = new Chart(ctx, {
                 type: 'line',
@@ -1192,21 +1195,24 @@
                     labels: months,
                     datasets: [
                         {
-                            label: 'Total Capacity',
-                            data: capacityData,
+                            label: 'Target (100%)',
+                            data: targetLine,
                             borderColor: '#94a3b8',
                             backgroundColor: 'transparent',
                             borderDash: [5, 5],
                             tension: 0,
-                            pointRadius: 0
+                            pointRadius: 0,
+                            borderWidth: 2
                         },
                         {
-                            label: 'Projected Demand',
-                            data: demandData,
+                            label: 'Team Utilization %',
+                            data: utilizationData,
                             borderColor: '#4f46e5',
                             backgroundColor: 'rgba(79, 70, 229, 0.1)',
                             fill: true,
-                            tension: 0.3
+                            tension: 0.3,
+                            pointBackgroundColor: '#4f46e5',
+                            pointRadius: 4
                         }
                     ]
                 },
@@ -1217,14 +1223,25 @@
                         legend: {
                             position: 'bottom',
                             labels: { color: '#475569', usePointStyle: true }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            title: { display: true, text: 'Allocation %', color: '#64748b' },
+                            max: 120,
+                            title: { display: true, text: 'Utilization %', color: '#64748b' },
                             grid: { color: '#e2e8f0' },
-                            ticks: { color: '#64748b' }
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(value) { return value + '%'; }
+                            }
                         },
                         x: {
                             grid: { display: false },
@@ -1235,55 +1252,84 @@
             });
         }
 
-        function renderDemandBySkillChart() {
-            const ctx = document.getElementById('demandBySkillChart').getContext('2d');
-            if (charts.demandBySkill) charts.demandBySkill.destroy();
+        function renderProjectedRevenueChart() {
+            const ctx = document.getElementById('projectedRevenueChart').getContext('2d');
+            if (charts.projectedRevenue) charts.projectedRevenue.destroy();
 
-            const demandBySkill = {};
+            const months = [...new Set(rawData.allocations.map(a => a.Month))].sort();
+            const revenueByMonth = {};
+            months.forEach(m => { revenueByMonth[m] = 0; });
 
-            filteredData.allocations.forEach(a => {
-                const resource = rawData.resources.find(r => r.ResourceID === a.ResourceID);
-                const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
-                if (resource && project) {
-                    const skill = resource.PrimarySkill;
-                    const prob = project.Probability / 100;
-                    demandBySkill[skill] = (demandBySkill[skill] || 0) + (a.AllocationPercent / 100 * prob);
+            // Calculate revenue per month based on project budgets and probability
+            // Distribute budget evenly across project duration months
+            filteredData.projects.forEach(p => {
+                const startDate = new Date(p.StartDate);
+                const endDate = new Date(p.EndDate);
+                const projectMonths = [];
+
+                // Find which months this project spans
+                months.forEach(m => {
+                    const [monthStr, yearStr] = m.split('-');
+                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const monthIdx = monthNames.indexOf(monthStr);
+                    const year = parseInt('20' + yearStr);
+                    const monthDate = new Date(year, monthIdx, 15);
+
+                    if (monthDate >= startDate && monthDate <= endDate) {
+                        projectMonths.push(m);
+                    }
+                });
+
+                // Distribute budget across months, weighted by probability
+                if (projectMonths.length > 0) {
+                    const monthlyRevenue = (p.Budget * (p.Probability / 100)) / projectMonths.length;
+                    projectMonths.forEach(m => {
+                        revenueByMonth[m] = (revenueByMonth[m] || 0) + monthlyRevenue;
+                    });
                 }
             });
 
-            const months = [...new Set(filteredData.allocations.map(a => a.Month))].length || 1;
-            Object.keys(demandBySkill).forEach(skill => {
-                demandBySkill[skill] = demandBySkill[skill] / months;
-            });
+            const revenueData = months.map(m => Math.round(revenueByMonth[m] / 1000)); // In thousands
 
-            const skillColors = {
-                'Frontend': '#6366f1',
-                'Backend': '#8b5cf6',
-                'Data Science': '#06b6d4',
-                'DevOps': '#f59e0b',
-                'QA': '#10b981',
-                'UI/UX': '#ec4899',
-                'Project Management': '#64748b'
-            };
-
-            charts.demandBySkill = new Chart(ctx, {
-                type: 'doughnut',
+            charts.projectedRevenue = new Chart(ctx, {
+                type: 'bar',
                 data: {
-                    labels: Object.keys(demandBySkill),
+                    labels: months,
                     datasets: [{
-                        data: Object.values(demandBySkill).map(v => v.toFixed(1)),
-                        backgroundColor: Object.keys(demandBySkill).map(s => skillColors[s] || '#94a3b8'),
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
+                        label: 'Revenue ($K)',
+                        data: revenueData,
+                        backgroundColor: '#10b981',
+                        borderColor: '#059669',
+                        borderWidth: 1,
+                        borderRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: { color: '#475569', padding: 12, font: { size: 11 } }
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y.toLocaleString() + 'K';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Revenue ($K)', color: '#64748b' },
+                            grid: { color: '#e2e8f0' },
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(value) { return '$' + value + 'K'; }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b' }
                         }
                     }
                 }
