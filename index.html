@@ -9,27 +9,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --bg-card-hover: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border: #334155;
-            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #4338ca;
+            --success: #059669;
+            --success-light: #10b981;
+            --warning: #d97706;
+            --warning-light: #f59e0b;
+            --danger: #dc2626;
+            --danger-light: #ef4444;
+            --info: #0284c7;
+            --info-light: #0ea5e9;
+
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
+            --bg-input: #f8fafc;
+
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -40,7 +47,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-dark);
+            background: var(--bg-page);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
@@ -48,17 +55,17 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, var(--bg-card) 0%, #1a1f35 100%);
-            padding: 1.5rem 2rem;
+            background: var(--bg-card);
+            padding: 1rem 2rem;
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
         }
 
         .header-content {
-            max-width: 1800px;
+            max-width: 1600px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -74,21 +81,25 @@
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: var(--gradient-1);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.25rem;
+            color: white;
         }
 
         .logo-text {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-primary);
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
         }
 
         .file-upload {
@@ -97,53 +108,48 @@
             gap: 1rem;
         }
 
-        .file-input-wrapper {
-            position: relative;
-        }
-
-        .file-input {
-            display: none;
-        }
+        .file-input { display: none; }
 
         .file-btn {
-            background: var(--gradient-1);
+            background: var(--primary);
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: 0.625rem 1.25rem;
             border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .file-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-md);
         }
 
         .file-name {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.875rem;
         }
 
         /* Main Content */
         .main-content {
-            max-width: 1800px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1.5rem 2rem;
         }
 
         /* Filters Section */
         .filters-section {
             background: var(--bg-card);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
             border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
         }
 
         .filters-header {
@@ -154,7 +160,7 @@
         }
 
         .filters-title {
-            font-size: 1rem;
+            font-size: 0.875rem;
             font-weight: 600;
             color: var(--text-secondary);
             text-transform: uppercase;
@@ -163,31 +169,29 @@
 
         .filters-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.375rem;
         }
 
         .filter-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
 
         .filter-select {
-            background: var(--bg-dark);
+            background: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
             color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -198,84 +202,75 @@
         }
 
         .reset-btn {
-            background: transparent;
+            background: var(--bg-hover);
             border: 1px solid var(--border);
             color: var(--text-secondary);
             padding: 0.5rem 1rem;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 500;
             transition: all 0.2s ease;
         }
 
         .reset-btn:hover {
-            background: var(--bg-card-hover);
+            background: var(--border);
             color: var(--text-primary);
         }
 
         /* Metrics Cards */
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .metric-card {
             background: var(--bg-card);
-            border-radius: 16px;
-            padding: 1.5rem;
+            border-radius: 12px;
+            padding: 1.25rem;
             border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
         }
 
         .metric-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
         }
-
-        .metric-card.primary::before { background: var(--gradient-1); }
-        .metric-card.success::before { background: var(--gradient-4); }
-        .metric-card.info::before { background: var(--gradient-3); }
-        .metric-card.warning::before { background: var(--gradient-5); }
-        .metric-card.danger::before { background: var(--gradient-2); }
 
         .metric-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.25rem;
         }
 
-        .metric-card.primary .metric-icon { background: rgba(99, 102, 241, 0.2); }
-        .metric-card.success .metric-icon { background: rgba(16, 185, 129, 0.2); }
-        .metric-card.info .metric-icon { background: rgba(59, 130, 246, 0.2); }
-        .metric-card.warning .metric-icon { background: rgba(245, 158, 11, 0.2); }
-        .metric-card.danger .metric-icon { background: rgba(239, 68, 68, 0.2); }
+        .metric-card.primary .metric-icon { background: #eef2ff; }
+        .metric-card.success .metric-icon { background: #ecfdf5; }
+        .metric-card.info .metric-icon { background: #f0f9ff; }
+        .metric-card.warning .metric-icon { background: #fffbeb; }
+        .metric-card.danger .metric-icon { background: #fef2f2; }
 
         .metric-value {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
             line-height: 1;
+            margin-bottom: 0.25rem;
         }
 
-        .metric-card.primary .metric-value { color: var(--primary-light); }
+        .metric-card.primary .metric-value { color: var(--primary); }
         .metric-card.success .metric-value { color: var(--success); }
         .metric-card.info .metric-value { color: var(--info); }
         .metric-card.warning .metric-value { color: var(--warning); }
@@ -283,23 +278,62 @@
 
         .metric-label {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .metric-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
             font-weight: 500;
         }
 
         /* Charts Grid */
-        .charts-grid {
+        .charts-row {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .charts-row-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .chart-card {
             background: var(--bg-card);
-            border-radius: 16px;
-            padding: 1.5rem;
+            border-radius: 12px;
+            padding: 1.25rem;
             border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
         }
 
         .chart-card.full-width {
@@ -309,30 +343,43 @@
         .chart-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+            align-items: flex-start;
+            margin-bottom: 1rem;
         }
 
         .chart-title {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-primary);
         }
 
         .chart-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-top: 0.25rem;
+            margin-top: 0.125rem;
         }
 
         .chart-container {
             position: relative;
-            height: 300px;
+            height: 280px;
         }
 
         .chart-container.tall {
-            height: 400px;
+            height: 350px;
         }
+
+        /* Probability Badge */
+        .prob-badge {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .prob-high { background: #dcfce7; color: #166534; }
+        .prob-medium { background: #fef3c7; color: #92400e; }
+        .prob-low { background: #fee2e2; color: #991b1b; }
 
         /* Heatmap Table */
         .heatmap-container {
@@ -342,96 +389,127 @@
         .heatmap-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .heatmap-table th,
         .heatmap-table td {
-            padding: 0.75rem;
+            padding: 0.625rem;
             text-align: center;
             border: 1px solid var(--border);
         }
 
         .heatmap-table th {
-            background: var(--bg-dark);
+            background: var(--bg-page);
             color: var(--text-secondary);
             font-weight: 600;
-            position: sticky;
-            top: 0;
+            font-size: 0.75rem;
         }
 
         .heatmap-table th:first-child,
         .heatmap-table td:first-child {
             text-align: left;
+            font-weight: 500;
+            background: var(--bg-card);
             position: sticky;
             left: 0;
-            background: var(--bg-card);
-            z-index: 1;
         }
 
         .heatmap-cell {
-            border-radius: 6px;
-            padding: 0.5rem;
+            border-radius: 4px;
+            padding: 0.375rem;
             font-weight: 600;
-            min-width: 60px;
+            min-width: 50px;
         }
 
-        .heatmap-low { background: rgba(239, 68, 68, 0.3); color: #fca5a5; }
-        .heatmap-medium { background: rgba(245, 158, 11, 0.3); color: #fcd34d; }
-        .heatmap-optimal { background: rgba(16, 185, 129, 0.3); color: #6ee7b7; }
-        .heatmap-high { background: rgba(59, 130, 246, 0.3); color: #93c5fd; }
-        .heatmap-overload { background: rgba(239, 68, 68, 0.6); color: #fff; }
+        .heatmap-low { background: #fee2e2; color: #991b1b; }
+        .heatmap-medium { background: #fef3c7; color: #92400e; }
+        .heatmap-optimal { background: #dcfce7; color: #166534; }
+        .heatmap-high { background: #dbeafe; color: #1e40af; }
+        .heatmap-overload { background: #dc2626; color: white; }
+        .heatmap-available { background: #f1f5f9; color: #64748b; }
 
         /* Data Table */
         .data-table-container {
             overflow-x: auto;
-            max-height: 400px;
+            max-height: 350px;
             overflow-y: auto;
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .data-table th {
-            background: var(--bg-dark);
+            background: var(--bg-page);
             color: var(--text-secondary);
             font-weight: 600;
-            padding: 1rem;
+            padding: 0.75rem;
             text-align: left;
             position: sticky;
             top: 0;
             border-bottom: 2px solid var(--border);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .data-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-light);
         }
 
         .data-table tr:hover {
-            background: var(--bg-card-hover);
+            background: var(--bg-hover);
         }
 
         .status-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
+            padding: 0.25rem 0.625rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
         }
 
-        .status-low { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
-        .status-overload { background: rgba(239, 68, 68, 0.4); color: #fff; }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-planned { background: #dbeafe; color: #1e40af; }
+        .status-available { background: #f0fdf4; color: #15803d; }
+        .status-low { background: #fef3c7; color: #92400e; }
+        .status-overload { background: #fee2e2; color: #991b1b; }
 
-        /* Portfolio Section */
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        /* Pipeline Chart Styling */
+        .pipeline-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            background: var(--bg-page);
+            border-left: 4px solid;
+        }
+
+        .pipeline-item.active { border-color: var(--success); }
+        .pipeline-item.planned { border-color: var(--info); }
+
+        .pipeline-info {
+            flex: 1;
+        }
+
+        .pipeline-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .pipeline-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .pipeline-prob {
+            text-align: right;
         }
 
         /* Gantt Chart */
@@ -440,66 +518,69 @@
         }
 
         .gantt-chart {
-            min-width: 800px;
+            min-width: 900px;
         }
 
-        .gantt-row {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .gantt-label {
-            width: 200px;
-            flex-shrink: 0;
-            font-weight: 500;
-            padding-right: 1rem;
-        }
-
-        .gantt-bars {
-            flex: 1;
-            position: relative;
-            height: 30px;
-            background: var(--bg-dark);
-            border-radius: 6px;
-        }
-
-        .gantt-bar {
-            position: absolute;
-            height: 24px;
-            top: 3px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: white;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            padding: 0 0.5rem;
-        }
-
-        .gantt-bar.in-progress { background: var(--gradient-1); }
-        .gantt-bar.planning { background: var(--gradient-3); }
-        .gantt-bar.on-hold { background: var(--gradient-5); }
-        .gantt-bar.completed { background: var(--gradient-4); }
-
-        .gantt-months {
+        .gantt-header {
             display: flex;
             padding-left: 200px;
             margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
         }
 
         .gantt-month {
             flex: 1;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 500;
         }
+
+        .gantt-row {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .gantt-label {
+            width: 200px;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding-right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .gantt-bars {
+            flex: 1;
+            position: relative;
+            height: 28px;
+            background: var(--bg-page);
+            border-radius: 4px;
+        }
+
+        .gantt-bar {
+            position: absolute;
+            height: 22px;
+            top: 3px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .gantt-bar.active { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .gantt-bar.planned { background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); opacity: 0.8; }
 
         /* Legend */
         .legend {
@@ -515,7 +596,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
@@ -525,55 +606,32 @@
             border-radius: 3px;
         }
 
-        /* Loading State */
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 60vh;
-            text-align: center;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 1.5rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-        }
-
+        /* Upload Prompt */
         .upload-prompt {
             text-align: center;
             padding: 4rem 2rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 2px dashed var(--border);
         }
 
         .upload-prompt-icon {
             width: 80px;
             height: 80px;
-            background: var(--gradient-1);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
             margin: 0 auto 1.5rem;
+            color: white;
         }
 
         .upload-prompt h2 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
 
         .upload-prompt p {
@@ -583,25 +641,14 @@
 
         /* Responsive */
         @media (max-width: 1200px) {
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-            }
+            .charts-row, .charts-row-3 { grid-template-columns: 1fr; }
+            .metrics-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .filters-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .metrics-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+            .header-content { flex-direction: column; gap: 1rem; }
+            .filters-grid { grid-template-columns: 1fr 1fr; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -610,7 +657,10 @@
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">📊</div>
-                <span class="logo-text">Resource Planning Dashboard</span>
+                <div>
+                    <div class="logo-text">Resource Planning Dashboard</div>
+                    <div class="logo-subtitle">Forward-Looking Capacity & Pipeline Analysis</div>
+                </div>
             </div>
             <div class="file-upload">
                 <div class="file-input-wrapper">
@@ -627,8 +677,8 @@
     <main class="main-content" id="mainContent">
         <div class="upload-prompt" id="uploadPrompt">
             <div class="upload-prompt-icon">📁</div>
-            <h2>Load Your Excel Data</h2>
-            <p>Click the button above to load your resource_planning_data.xlsx file</p>
+            <h2>Load Your Planning Data</h2>
+            <p>Upload your resource_planning_data.xlsx to see capacity forecasts and pipeline analysis</p>
             <button class="file-btn" onclick="document.getElementById('fileInput').click()">
                 📁 Select Excel File
             </button>
@@ -638,7 +688,7 @@
             <!-- Filters Section -->
             <section class="filters-section">
                 <div class="filters-header">
-                    <span class="filters-title">🔍 Global Filters</span>
+                    <span class="filters-title">Filters</span>
                     <button class="reset-btn" onclick="resetFilters()">Reset All</button>
                 </div>
                 <div class="filters-grid">
@@ -661,9 +711,11 @@
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label class="filter-label">Project Status</label>
-                        <select class="filter-select" id="filterStatus" onchange="applyFilters()">
-                            <option value="">All Statuses</option>
+                        <label class="filter-label">Project Type</label>
+                        <select class="filter-select" id="filterType" onchange="applyFilters()">
+                            <option value="">All Types</option>
+                            <option value="Active">Active</option>
+                            <option value="Planned">Planned</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -678,65 +730,106 @@
             <!-- Key Metrics -->
             <section class="metrics-grid" id="metricsSection">
                 <div class="metric-card primary">
-                    <div class="metric-icon">📂</div>
-                    <div class="metric-value" id="metricProjects">0</div>
+                    <div class="metric-header">
+                        <div class="metric-icon">📂</div>
+                    </div>
+                    <div class="metric-value" id="metricActiveProjects">0</div>
                     <div class="metric-label">Active Projects</div>
-                </div>
-                <div class="metric-card success">
-                    <div class="metric-icon">👥</div>
-                    <div class="metric-value" id="metricResources">0</div>
-                    <div class="metric-label">Resources Scheduled</div>
+                    <div class="metric-subtitle">Confirmed & in progress</div>
                 </div>
                 <div class="metric-card info">
-                    <div class="metric-icon">📈</div>
-                    <div class="metric-value" id="metricUtilization">0%</div>
-                    <div class="metric-label">Avg Utilization</div>
+                    <div class="metric-header">
+                        <div class="metric-icon">📋</div>
+                    </div>
+                    <div class="metric-value" id="metricPlannedProjects">0</div>
+                    <div class="metric-label">Planned Projects</div>
+                    <div class="metric-subtitle" id="metricWeightedFTE">0 weighted FTE</div>
+                </div>
+                <div class="metric-card success">
+                    <div class="metric-header">
+                        <div class="metric-icon">👥</div>
+                    </div>
+                    <div class="metric-value" id="metricResources">0</div>
+                    <div class="metric-label">Total Resources</div>
+                    <div class="metric-subtitle" id="metricAvgUtil">0% avg utilization</div>
                 </div>
                 <div class="metric-card warning">
-                    <div class="metric-icon">⚠️</div>
-                    <div class="metric-value" id="metricLowUtil">0</div>
-                    <div class="metric-label">Low Utilization (&lt;50%)</div>
+                    <div class="metric-header">
+                        <div class="metric-icon">⚠️</div>
+                    </div>
+                    <div class="metric-value" id="metricAvailable">0</div>
+                    <div class="metric-label">Available Capacity</div>
+                    <div class="metric-subtitle">Resources under 50%</div>
                 </div>
                 <div class="metric-card danger">
-                    <div class="metric-icon">🔥</div>
-                    <div class="metric-value" id="metricOverload">0</div>
-                    <div class="metric-label">Overloaded (&gt;100%)</div>
+                    <div class="metric-header">
+                        <div class="metric-icon">🔥</div>
+                    </div>
+                    <div class="metric-value" id="metricOverloaded">0</div>
+                    <div class="metric-label">Overloaded</div>
+                    <div class="metric-subtitle">Resources over 100%</div>
                 </div>
             </section>
 
-            <!-- Charts Row 1 -->
-            <section class="charts-grid">
+            <!-- Row 1: Pipeline & Utilization Forecast -->
+            <section class="charts-row">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
-                            <div class="chart-title">Resource-wise Projects Lined Up</div>
-                            <div class="chart-subtitle">Number of projects per resource</div>
+                            <div class="chart-title">Project Pipeline</div>
+                            <div class="chart-subtitle">Active and planned projects with probability</div>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="projectsPerResourceChart"></canvas>
+                    <div class="chart-container tall">
+                        <canvas id="pipelineChart"></canvas>
                     </div>
                 </div>
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
-                            <div class="chart-title">Project Pipeline by Status</div>
-                            <div class="chart-subtitle">Distribution of projects by status</div>
+                            <div class="chart-title">Aggregate Utilization Forecast</div>
+                            <div class="chart-subtitle">Team capacity vs demand over time</div>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="statusDonutChart"></canvas>
+                    <div class="chart-container tall">
+                        <canvas id="aggregateUtilChart"></canvas>
                     </div>
                 </div>
             </section>
 
-            <!-- Utilization Heatmap -->
-            <section class="charts-grid">
+            <!-- Row 2: Demand by Skill & FTE Gap -->
+            <section class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Demand by Skill</div>
+                            <div class="chart-subtitle">Required FTE by skill (probability-weighted)</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="demandBySkillChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Supply vs Demand Gap</div>
+                            <div class="chart-subtitle">Available capacity vs projected need by skill</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="supplyDemandChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resource Utilization Heatmap -->
+            <section class="charts-row">
                 <div class="chart-card full-width">
                     <div class="chart-header">
                         <div>
                             <div class="chart-title">Resource Utilization Forecast</div>
-                            <div class="chart-subtitle">Monthly allocation percentage by resource</div>
+                            <div class="chart-subtitle">Projected monthly allocation per resource - identify who should go where</div>
                         </div>
                     </div>
                     <div class="heatmap-container">
@@ -746,6 +839,10 @@
                         </table>
                     </div>
                     <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color heatmap-available"></div>
+                            <span>Unallocated (0%)</span>
+                        </div>
                         <div class="legend-item">
                             <div class="legend-color heatmap-low"></div>
                             <span>Low (&lt;50%)</span>
@@ -770,62 +867,47 @@
                 </div>
             </section>
 
-            <!-- Portfolio Summary Charts -->
-            <section class="portfolio-grid">
+            <!-- Row 3: Available Resources & Project Assignments -->
+            <section class="charts-row">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
-                            <div class="chart-title">Required FTE by Skill</div>
-                            <div class="chart-subtitle">FTE demand per skill category</div>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="fteBySkillChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Required vs Assigned FTE</div>
-                            <div class="chart-subtitle">Gap analysis by project</div>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="fteGapChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Utilization Distribution</div>
-                            <div class="chart-subtitle">Resources by utilization range</div>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="utilizationDistChart"></canvas>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Low Utilization Table -->
-            <section class="charts-grid">
-                <div class="chart-card full-width">
-                    <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Low Utilization Resources</div>
-                            <div class="chart-subtitle">Resources with average allocation below 50%</div>
+                            <div class="chart-title">Available Resources for Staffing</div>
+                            <div class="chart-subtitle">Resources with capacity for new projects</div>
                         </div>
                     </div>
                     <div class="data-table-container">
-                        <table class="data-table" id="lowUtilTable">
+                        <table class="data-table" id="availableResourcesTable">
                             <thead>
                                 <tr>
                                     <th>Resource</th>
-                                    <th>Primary Skill</th>
-                                    <th>Department</th>
-                                    <th>Avg Allocation</th>
-                                    <th>Projects</th>
-                                    <th>Status</th>
+                                    <th>Skill</th>
+                                    <th>Current Util</th>
+                                    <th>Available %</th>
+                                    <th>Recommendation</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Projects Needing Resources</div>
+                            <div class="chart-subtitle">Planned projects with staffing gaps</div>
+                        </div>
+                    </div>
+                    <div class="data-table-container">
+                        <table class="data-table" id="projectNeedsTable">
+                            <thead>
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Type</th>
+                                    <th>Probability</th>
+                                    <th>Required FTE</th>
+                                    <th>Assigned</th>
+                                    <th>Gap</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -835,33 +917,23 @@
             </section>
 
             <!-- Gantt Chart -->
-            <section class="charts-grid">
+            <section class="charts-row">
                 <div class="chart-card full-width">
                     <div class="chart-header">
                         <div>
-                            <div class="chart-title">Project Timeline (Gantt)</div>
-                            <div class="chart-subtitle">Project schedule overview</div>
+                            <div class="chart-title">Project Timeline</div>
+                            <div class="chart-subtitle">Active and planned project schedule</div>
                         </div>
                     </div>
-                    <div class="gantt-container" id="ganttContainer">
-                        <!-- Gantt chart will be rendered here -->
-                    </div>
+                    <div class="gantt-container" id="ganttContainer"></div>
                     <div class="legend">
                         <div class="legend-item">
-                            <div class="legend-color" style="background: var(--gradient-1);"></div>
-                            <span>In Progress</span>
+                            <div class="legend-color" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);"></div>
+                            <span>Active (100%)</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-color" style="background: var(--gradient-3);"></div>
-                            <span>Planning</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: var(--gradient-5);"></div>
-                            <span>On Hold</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: var(--gradient-4);"></div>
-                            <span>Completed</span>
+                            <div class="legend-color" style="background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); opacity: 0.8;"></div>
+                            <span>Planned (with probability)</span>
                         </div>
                     </div>
                 </div>
@@ -871,18 +943,8 @@
 
     <script>
         // Global data storage
-        let rawData = {
-            resources: [],
-            projects: [],
-            allocations: []
-        };
-        let filteredData = {
-            resources: [],
-            projects: [],
-            allocations: []
-        };
-
-        // Chart instances
+        let rawData = { resources: [], projects: [], allocations: [] };
+        let filteredData = { resources: [], projects: [], allocations: [] };
         let charts = {};
 
         // File input handler
@@ -898,22 +960,16 @@
                 const data = await file.arrayBuffer();
                 const workbook = XLSX.read(data);
 
-                // Parse sheets
                 rawData.resources = XLSX.utils.sheet_to_json(workbook.Sheets['Resources'] || workbook.Sheets[workbook.SheetNames[0]]);
                 rawData.projects = XLSX.utils.sheet_to_json(workbook.Sheets['Projects'] || workbook.Sheets[workbook.SheetNames[1]]);
                 rawData.allocations = XLSX.utils.sheet_to_json(workbook.Sheets['Allocations'] || workbook.Sheets[workbook.SheetNames[2]]);
 
-                // Initialize filtered data
                 filteredData = JSON.parse(JSON.stringify(rawData));
-
-                // Populate filters
                 populateFilters();
 
-                // Show dashboard
                 document.getElementById('uploadPrompt').style.display = 'none';
                 document.getElementById('dashboardContent').style.display = 'block';
 
-                // Render dashboard
                 renderDashboard();
             } catch (error) {
                 console.error('Error reading file:', error);
@@ -922,21 +978,18 @@
         }
 
         function populateFilters() {
-            // Resources
             const resourceSelect = document.getElementById('filterResource');
             resourceSelect.innerHTML = '<option value="">All Resources</option>';
             rawData.resources.forEach(r => {
                 resourceSelect.innerHTML += `<option value="${r.ResourceID}">${r.ResourceName}</option>`;
             });
 
-            // Projects
             const projectSelect = document.getElementById('filterProject');
             projectSelect.innerHTML = '<option value="">All Projects</option>';
             rawData.projects.forEach(p => {
                 projectSelect.innerHTML += `<option value="${p.ProjectID}">${p.ProjectName}</option>`;
             });
 
-            // Skills
             const skillSelect = document.getElementById('filterSkill');
             skillSelect.innerHTML = '<option value="">All Skills</option>';
             const skills = [...new Set(rawData.resources.map(r => r.PrimarySkill))];
@@ -944,15 +997,6 @@
                 skillSelect.innerHTML += `<option value="${s}">${s}</option>`;
             });
 
-            // Status
-            const statusSelect = document.getElementById('filterStatus');
-            statusSelect.innerHTML = '<option value="">All Statuses</option>';
-            const statuses = [...new Set(rawData.projects.map(p => p.Status))];
-            statuses.forEach(s => {
-                statusSelect.innerHTML += `<option value="${s}">${s}</option>`;
-            });
-
-            // Time periods
             const periodSelect = document.getElementById('filterPeriod');
             periodSelect.innerHTML = '<option value="">All Periods</option>';
             const periods = [...new Set(rawData.allocations.map(a => a.Month))];
@@ -965,24 +1009,21 @@
             const resourceFilter = document.getElementById('filterResource').value;
             const projectFilter = document.getElementById('filterProject').value;
             const skillFilter = document.getElementById('filterSkill').value;
-            const statusFilter = document.getElementById('filterStatus').value;
+            const typeFilter = document.getElementById('filterType').value;
             const periodFilter = document.getElementById('filterPeriod').value;
 
-            // Filter resources
             filteredData.resources = rawData.resources.filter(r => {
                 if (resourceFilter && r.ResourceID !== resourceFilter) return false;
                 if (skillFilter && r.PrimarySkill !== skillFilter) return false;
                 return true;
             });
 
-            // Filter projects
             filteredData.projects = rawData.projects.filter(p => {
                 if (projectFilter && p.ProjectID !== projectFilter) return false;
-                if (statusFilter && p.Status !== statusFilter) return false;
+                if (typeFilter && p.ProjectType !== typeFilter) return false;
                 return true;
             });
 
-            // Filter allocations
             const resourceIds = filteredData.resources.map(r => r.ResourceID);
             const projectIds = filteredData.projects.map(p => p.ProjectID);
 
@@ -1000,7 +1041,7 @@
             document.getElementById('filterResource').value = '';
             document.getElementById('filterProject').value = '';
             document.getElementById('filterSkill').value = '';
-            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterType').value = '';
             document.getElementById('filterPeriod').value = '';
             filteredData = JSON.parse(JSON.stringify(rawData));
             renderDashboard();
@@ -1008,165 +1049,313 @@
 
         function renderDashboard() {
             updateMetrics();
-            renderProjectsPerResourceChart();
-            renderStatusDonutChart();
+            renderPipelineChart();
+            renderAggregateUtilChart();
+            renderDemandBySkillChart();
+            renderSupplyDemandChart();
             renderUtilizationHeatmap();
-            renderFTEBySkillChart();
-            renderFTEGapChart();
-            renderUtilizationDistChart();
-            renderLowUtilTable();
+            renderAvailableResourcesTable();
+            renderProjectNeedsTable();
             renderGanttChart();
         }
 
         function getResourceUtilization() {
             const utilization = {};
+            const months = [...new Set(rawData.allocations.map(a => a.Month))];
 
-            filteredData.allocations.forEach(a => {
-                if (!utilization[a.ResourceID]) {
-                    utilization[a.ResourceID] = { total: 0, count: 0, months: {} };
-                }
-                if (!utilization[a.ResourceID].months[a.Month]) {
-                    utilization[a.ResourceID].months[a.Month] = 0;
-                }
-                utilization[a.ResourceID].months[a.Month] += a.AllocationPercent;
+            filteredData.resources.forEach(r => {
+                utilization[r.ResourceID] = { months: {}, avg: 0 };
+                months.forEach(m => { utilization[r.ResourceID].months[m] = 0; });
             });
 
-            // Calculate averages
+            filteredData.allocations.forEach(a => {
+                if (utilization[a.ResourceID]) {
+                    utilization[a.ResourceID].months[a.Month] =
+                        (utilization[a.ResourceID].months[a.Month] || 0) + a.AllocationPercent;
+                }
+            });
+
             Object.keys(utilization).forEach(rid => {
-                const months = Object.values(utilization[rid].months);
-                utilization[rid].avg = months.reduce((a, b) => a + b, 0) / months.length;
+                const vals = Object.values(utilization[rid].months).filter(v => v > 0);
+                utilization[rid].avg = vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
             });
 
             return utilization;
         }
 
         function updateMetrics() {
-            // Active projects (In Progress)
-            const activeProjects = filteredData.projects.filter(p => p.Status === 'In Progress').length;
-            document.getElementById('metricProjects').textContent = activeProjects;
+            const activeProjects = filteredData.projects.filter(p => p.ProjectType === 'Active').length;
+            const plannedProjects = filteredData.projects.filter(p => p.ProjectType === 'Planned');
 
-            // Resources scheduled
-            const scheduledResources = [...new Set(filteredData.allocations.map(a => a.ResourceID))].length;
-            document.getElementById('metricResources').textContent = scheduledResources;
+            document.getElementById('metricActiveProjects').textContent = activeProjects;
+            document.getElementById('metricPlannedProjects').textContent = plannedProjects.length;
 
-            // Average utilization
+            const weightedFTE = plannedProjects.reduce((sum, p) => sum + (p.RequiredFTE * (p.Probability / 100)), 0);
+            document.getElementById('metricWeightedFTE').textContent = weightedFTE.toFixed(1) + ' weighted FTE';
+
+            document.getElementById('metricResources').textContent = filteredData.resources.length;
+
             const utilization = getResourceUtilization();
             const avgUtil = Object.values(utilization).reduce((sum, u) => sum + u.avg, 0) / Math.max(Object.keys(utilization).length, 1);
-            document.getElementById('metricUtilization').textContent = Math.round(avgUtil) + '%';
+            document.getElementById('metricAvgUtil').textContent = Math.round(avgUtil) + '% avg utilization';
 
-            // Low utilization count
-            const lowUtilCount = Object.values(utilization).filter(u => u.avg < 50).length;
-            document.getElementById('metricLowUtil').textContent = lowUtilCount;
+            const availableCount = Object.values(utilization).filter(u => u.avg < 50).length;
+            document.getElementById('metricAvailable').textContent = availableCount;
 
-            // Overloaded count
-            const overloadCount = Object.values(utilization).filter(u => {
-                return Object.values(u.months).some(m => m > 100);
-            }).length;
-            document.getElementById('metricOverload').textContent = overloadCount;
+            const overloadCount = Object.values(utilization).filter(u =>
+                Object.values(u.months).some(m => m > 100)
+            ).length;
+            document.getElementById('metricOverloaded').textContent = overloadCount;
         }
 
-        function renderProjectsPerResourceChart() {
-            const ctx = document.getElementById('projectsPerResourceChart').getContext('2d');
+        function renderPipelineChart() {
+            const ctx = document.getElementById('pipelineChart').getContext('2d');
+            if (charts.pipeline) charts.pipeline.destroy();
 
-            if (charts.projectsPerResource) {
-                charts.projectsPerResource.destroy();
-            }
+            const activeProjects = filteredData.projects.filter(p => p.ProjectType === 'Active');
+            const plannedProjects = filteredData.projects.filter(p => p.ProjectType === 'Planned')
+                .sort((a, b) => b.Probability - a.Probability);
 
-            // Count projects per resource
-            const projectCounts = {};
-            filteredData.allocations.forEach(a => {
-                if (!projectCounts[a.ResourceID]) {
-                    projectCounts[a.ResourceID] = new Set();
-                }
-                projectCounts[a.ResourceID].add(a.ProjectID);
-            });
+            const allProjects = [...activeProjects, ...plannedProjects];
+            const labels = allProjects.map(p => p.ProjectName.substring(0, 20));
+            const data = allProjects.map(p => p.RequiredFTE);
+            const colors = allProjects.map(p => p.ProjectType === 'Active' ? '#059669' : '#0ea5e9');
+            const borderColors = allProjects.map(p => p.ProjectType === 'Active' ? '#047857' : '#0284c7');
 
-            const labels = [];
-            const data = [];
-            const colors = [];
-            const colorPalette = ['#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#f97316', '#eab308'];
-
-            Object.keys(projectCounts).forEach((rid, i) => {
-                const resource = rawData.resources.find(r => r.ResourceID === rid);
-                if (resource) {
-                    labels.push(resource.ResourceName.split(' ')[0]);
-                    data.push(projectCounts[rid].size);
-                    colors.push(colorPalette[i % colorPalette.length]);
-                }
-            });
-
-            charts.projectsPerResource = new Chart(ctx, {
+            charts.pipeline = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Projects',
+                        label: 'Required FTE',
                         data: data,
                         backgroundColor: colors,
-                        borderRadius: 8,
-                        borderSkipped: false
+                        borderColor: borderColors,
+                        borderWidth: 1,
+                        borderRadius: 4
                     }]
                 },
                 options: {
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const project = allProjects[context.dataIndex];
+                                    return `Type: ${project.ProjectType}\nProbability: ${project.Probability}%`;
+                                }
+                            }
+                        }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { stepSize: 1, color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        },
                         x: {
-                            ticks: { color: '#94a3b8' },
-                            grid: { display: false }
+                            beginAtZero: true,
+                            title: { display: true, text: 'Required FTE', color: '#64748b' },
+                            grid: { color: '#e2e8f0' },
+                            ticks: { color: '#64748b' }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { color: '#475569', font: { size: 11 } }
                         }
                     }
                 }
             });
         }
 
-        function renderStatusDonutChart() {
-            const ctx = document.getElementById('statusDonutChart').getContext('2d');
+        function renderAggregateUtilChart() {
+            const ctx = document.getElementById('aggregateUtilChart').getContext('2d');
+            if (charts.aggregateUtil) charts.aggregateUtil.destroy();
 
-            if (charts.statusDonut) {
-                charts.statusDonut.destroy();
-            }
+            const months = [...new Set(rawData.allocations.map(a => a.Month))].sort();
+            const totalCapacity = filteredData.resources.length * 100;
 
-            // Count projects by status
-            const statusCounts = {};
-            filteredData.projects.forEach(p => {
-                statusCounts[p.Status] = (statusCounts[p.Status] || 0) + 1;
+            const demandByMonth = {};
+            months.forEach(m => { demandByMonth[m] = 0; });
+
+            filteredData.allocations.forEach(a => {
+                const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
+                const prob = project ? project.Probability / 100 : 1;
+                demandByMonth[a.Month] = (demandByMonth[a.Month] || 0) + (a.AllocationPercent * prob);
             });
 
-            const statusColors = {
-                'In Progress': '#6366f1',
-                'Planning': '#3b82f6',
-                'On Hold': '#f59e0b',
-                'Completed': '#10b981'
+            const demandData = months.map(m => demandByMonth[m]);
+            const capacityData = months.map(() => totalCapacity);
+            const utilizationData = months.map(m => (demandByMonth[m] / totalCapacity) * 100);
+
+            charts.aggregateUtil = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Total Capacity',
+                            data: capacityData,
+                            borderColor: '#94a3b8',
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            tension: 0,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Projected Demand',
+                            data: demandData,
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#475569', usePointStyle: true }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Allocation %', color: '#64748b' },
+                            grid: { color: '#e2e8f0' },
+                            ticks: { color: '#64748b' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderDemandBySkillChart() {
+            const ctx = document.getElementById('demandBySkillChart').getContext('2d');
+            if (charts.demandBySkill) charts.demandBySkill.destroy();
+
+            const demandBySkill = {};
+
+            filteredData.allocations.forEach(a => {
+                const resource = rawData.resources.find(r => r.ResourceID === a.ResourceID);
+                const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
+                if (resource && project) {
+                    const skill = resource.PrimarySkill;
+                    const prob = project.Probability / 100;
+                    demandBySkill[skill] = (demandBySkill[skill] || 0) + (a.AllocationPercent / 100 * prob);
+                }
+            });
+
+            const months = [...new Set(filteredData.allocations.map(a => a.Month))].length || 1;
+            Object.keys(demandBySkill).forEach(skill => {
+                demandBySkill[skill] = demandBySkill[skill] / months;
+            });
+
+            const skillColors = {
+                'Frontend': '#6366f1',
+                'Backend': '#8b5cf6',
+                'Data Science': '#06b6d4',
+                'DevOps': '#f59e0b',
+                'QA': '#10b981',
+                'UI/UX': '#ec4899',
+                'Project Management': '#64748b'
             };
 
-            charts.statusDonut = new Chart(ctx, {
+            charts.demandBySkill = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(statusCounts),
+                    labels: Object.keys(demandBySkill),
                     datasets: [{
-                        data: Object.values(statusCounts),
-                        backgroundColor: Object.keys(statusCounts).map(s => statusColors[s] || '#64748b'),
-                        borderWidth: 0,
-                        hoverOffset: 10
+                        data: Object.values(demandBySkill).map(v => v.toFixed(1)),
+                        backgroundColor: Object.keys(demandBySkill).map(s => skillColors[s] || '#94a3b8'),
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { color: '#475569', padding: 12, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderSupplyDemandChart() {
+            const ctx = document.getElementById('supplyDemandChart').getContext('2d');
+            if (charts.supplyDemand) charts.supplyDemand.destroy();
+
+            const supplyBySkill = {};
+            const demandBySkill = {};
+
+            filteredData.resources.forEach(r => {
+                supplyBySkill[r.PrimarySkill] = (supplyBySkill[r.PrimarySkill] || 0) + 1;
+            });
+
+            filteredData.allocations.forEach(a => {
+                const resource = rawData.resources.find(r => r.ResourceID === a.ResourceID);
+                const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
+                if (resource && project) {
+                    const skill = resource.PrimarySkill;
+                    const prob = project.Probability / 100;
+                    demandBySkill[skill] = (demandBySkill[skill] || 0) + (a.AllocationPercent / 100 * prob);
+                }
+            });
+
+            const months = [...new Set(filteredData.allocations.map(a => a.Month))].length || 1;
+            Object.keys(demandBySkill).forEach(skill => {
+                demandBySkill[skill] = demandBySkill[skill] / months;
+            });
+
+            const skills = [...new Set([...Object.keys(supplyBySkill), ...Object.keys(demandBySkill)])];
+
+            charts.supplyDemand = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: skills,
+                    datasets: [
+                        {
+                            label: 'Supply (FTE)',
+                            data: skills.map(s => supplyBySkill[s] || 0),
+                            backgroundColor: '#10b981',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Demand (FTE)',
+                            data: skills.map(s => (demandBySkill[s] || 0).toFixed(1)),
+                            backgroundColor: '#6366f1',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: '#94a3b8', padding: 20 }
+                            labels: { color: '#475569', usePointStyle: true }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'FTE', color: '#64748b' },
+                            grid: { color: '#e2e8f0' },
+                            ticks: { color: '#64748b' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b', maxRotation: 45 }
                         }
                     }
                 }
@@ -1178,31 +1367,27 @@
             const thead = table.querySelector('thead');
             const tbody = table.querySelector('tbody');
 
-            // Get all months
             const months = [...new Set(rawData.allocations.map(a => a.Month))].sort();
 
-            // Build header
             thead.innerHTML = `<tr><th>Resource</th><th>Skill</th>${months.map(m => `<th>${m}</th>`).join('')}<th>Avg</th></tr>`;
 
-            // Get utilization data
             const utilization = {};
-            filteredData.allocations.forEach(a => {
-                if (!utilization[a.ResourceID]) {
-                    utilization[a.ResourceID] = {};
-                }
-                if (!utilization[a.ResourceID][a.Month]) {
-                    utilization[a.ResourceID][a.Month] = 0;
-                }
-                utilization[a.ResourceID][a.Month] += a.AllocationPercent;
+            filteredData.resources.forEach(r => {
+                utilization[r.ResourceID] = {};
+                months.forEach(m => { utilization[r.ResourceID][m] = 0; });
             });
 
-            // Build rows
+            filteredData.allocations.forEach(a => {
+                if (utilization[a.ResourceID]) {
+                    utilization[a.ResourceID][a.Month] = (utilization[a.ResourceID][a.Month] || 0) + a.AllocationPercent;
+                }
+            });
+
             tbody.innerHTML = '';
             filteredData.resources.forEach(r => {
-                if (!utilization[r.ResourceID]) return;
-
                 const monthValues = months.map(m => utilization[r.ResourceID][m] || 0);
-                const avg = monthValues.reduce((a, b) => a + b, 0) / months.length;
+                const nonZeroValues = monthValues.filter(v => v > 0);
+                const avg = nonZeroValues.length > 0 ? nonZeroValues.reduce((a, b) => a + b, 0) / nonZeroValues.length : 0;
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -1220,6 +1405,7 @@
         }
 
         function getHeatmapClass(value) {
+            if (value === 0) return 'heatmap-available';
             if (value > 100) return 'heatmap-overload';
             if (value >= 90) return 'heatmap-high';
             if (value >= 70) return 'heatmap-optimal';
@@ -1227,246 +1413,87 @@
             return 'heatmap-low';
         }
 
-        function renderFTEBySkillChart() {
-            const ctx = document.getElementById('fteBySkillChart').getContext('2d');
-
-            if (charts.fteBySkill) {
-                charts.fteBySkill.destroy();
-            }
-
-            // Calculate FTE by skill from allocations
-            const fteBySkill = {};
-            filteredData.allocations.forEach(a => {
-                const resource = rawData.resources.find(r => r.ResourceID === a.ResourceID);
-                if (resource) {
-                    const skill = resource.PrimarySkill;
-                    if (!fteBySkill[skill]) {
-                        fteBySkill[skill] = 0;
-                    }
-                    fteBySkill[skill] += a.AllocationPercent / 100;
-                }
-            });
-
-            // Average across months
-            const months = [...new Set(filteredData.allocations.map(a => a.Month))].length;
-            Object.keys(fteBySkill).forEach(skill => {
-                fteBySkill[skill] = fteBySkill[skill] / Math.max(months, 1);
-            });
-
-            charts.fteBySkill = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(fteBySkill),
-                    datasets: [{
-                        label: 'Avg FTE',
-                        data: Object.values(fteBySkill).map(v => v.toFixed(1)),
-                        backgroundColor: ['#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#f97316'],
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        },
-                        y: {
-                            ticks: { color: '#94a3b8' },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderFTEGapChart() {
-            const ctx = document.getElementById('fteGapChart').getContext('2d');
-
-            if (charts.fteGap) {
-                charts.fteGap.destroy();
-            }
-
-            // Calculate assigned FTE per project
-            const assignedFTE = {};
-            filteredData.allocations.forEach(a => {
-                if (!assignedFTE[a.ProjectID]) {
-                    assignedFTE[a.ProjectID] = 0;
-                }
-                assignedFTE[a.ProjectID] += a.AllocationPercent / 100;
-            });
-
-            // Average across months
-            const months = [...new Set(filteredData.allocations.map(a => a.Month))].length;
-            Object.keys(assignedFTE).forEach(pid => {
-                assignedFTE[pid] = assignedFTE[pid] / Math.max(months, 1);
-            });
-
-            const labels = [];
-            const required = [];
-            const assigned = [];
-
-            filteredData.projects.slice(0, 6).forEach(p => {
-                labels.push(p.ProjectName.substring(0, 15));
-                required.push(p.RequiredFTE || 0);
-                assigned.push(assignedFTE[p.ProjectID] ? assignedFTE[p.ProjectID].toFixed(1) : 0);
-            });
-
-            charts.fteGap = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Required FTE',
-                            data: required,
-                            backgroundColor: '#6366f1',
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Assigned FTE',
-                            data: assigned,
-                            backgroundColor: '#10b981',
-                            borderRadius: 4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#94a3b8' }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        },
-                        x: {
-                            ticks: { color: '#94a3b8', maxRotation: 45 },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderUtilizationDistChart() {
-            const ctx = document.getElementById('utilizationDistChart').getContext('2d');
-
-            if (charts.utilizationDist) {
-                charts.utilizationDist.destroy();
-            }
-
-            const utilization = getResourceUtilization();
-            const distribution = {
-                'Low (<50%)': 0,
-                'Medium (50-70%)': 0,
-                'Optimal (70-90%)': 0,
-                'High (90-100%)': 0,
-                'Overloaded (>100%)': 0
-            };
-
-            Object.values(utilization).forEach(u => {
-                const avg = u.avg;
-                if (avg > 100) distribution['Overloaded (>100%)']++;
-                else if (avg >= 90) distribution['High (90-100%)']++;
-                else if (avg >= 70) distribution['Optimal (70-90%)']++;
-                else if (avg >= 50) distribution['Medium (50-70%)']++;
-                else distribution['Low (<50%)']++;
-            });
-
-            charts.utilizationDist = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(distribution),
-                    datasets: [{
-                        data: Object.values(distribution),
-                        backgroundColor: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#dc2626'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '50%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#94a3b8', boxWidth: 12, padding: 10, font: { size: 11 } }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderLowUtilTable() {
-            const tbody = document.getElementById('lowUtilTable').querySelector('tbody');
+        function renderAvailableResourcesTable() {
+            const tbody = document.getElementById('availableResourcesTable').querySelector('tbody');
             const utilization = getResourceUtilization();
 
-            // Find resources with low utilization
-            const lowUtilResources = [];
+            const availableResources = [];
             filteredData.resources.forEach(r => {
                 const util = utilization[r.ResourceID];
-                if (util && util.avg < 50) {
-                    const projectCount = [...new Set(filteredData.allocations
-                        .filter(a => a.ResourceID === r.ResourceID)
-                        .map(a => a.ProjectID)
-                    )].length;
-
-                    lowUtilResources.push({
+                if (util && util.avg < 80) {
+                    availableResources.push({
                         ...r,
-                        avgAllocation: util.avg,
-                        projectCount
+                        avgUtil: util.avg,
+                        available: 100 - util.avg
                     });
                 }
             });
 
-            // Also add resources with no allocations
-            filteredData.resources.forEach(r => {
-                if (!utilization[r.ResourceID] && r.Status === 'Active') {
-                    lowUtilResources.push({
-                        ...r,
-                        avgAllocation: 0,
-                        projectCount: 0
-                    });
-                }
-            });
+            availableResources.sort((a, b) => a.avgUtil - b.avgUtil);
 
             tbody.innerHTML = '';
-            lowUtilResources.sort((a, b) => a.avgAllocation - b.avgAllocation).forEach(r => {
+            availableResources.slice(0, 10).forEach(r => {
+                const recommendation = r.avgUtil < 30 ? 'Ready for new project' :
+                                      r.avgUtil < 50 ? 'Can take partial allocation' :
+                                      'Limited availability';
+                const statusClass = r.avgUtil < 30 ? 'status-available' :
+                                   r.avgUtil < 50 ? 'status-low' : 'status-planned';
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${r.ResourceName}</td>
                     <td>${r.PrimarySkill}</td>
-                    <td>${r.Department}</td>
-                    <td><span class="status-badge status-low">${Math.round(r.avgAllocation)}%</span></td>
-                    <td>${r.projectCount}</td>
-                    <td>${r.Status}</td>
+                    <td>${Math.round(r.avgUtil)}%</td>
+                    <td><strong>${Math.round(r.available)}%</strong></td>
+                    <td><span class="status-badge ${statusClass}">${recommendation}</span></td>
                 `;
                 tbody.appendChild(row);
             });
 
-            if (lowUtilResources.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);">No low utilization resources found</td></tr>';
+            if (availableResources.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">All resources fully allocated</td></tr>';
             }
+        }
+
+        function renderProjectNeedsTable() {
+            const tbody = document.getElementById('projectNeedsTable').querySelector('tbody');
+
+            const assignedFTE = {};
+            const months = [...new Set(filteredData.allocations.map(a => a.Month))].length || 1;
+
+            filteredData.allocations.forEach(a => {
+                assignedFTE[a.ProjectID] = (assignedFTE[a.ProjectID] || 0) + (a.AllocationPercent / 100);
+            });
+
+            Object.keys(assignedFTE).forEach(pid => {
+                assignedFTE[pid] = assignedFTE[pid] / months;
+            });
+
+            tbody.innerHTML = '';
+            filteredData.projects.forEach(p => {
+                const assigned = assignedFTE[p.ProjectID] || 0;
+                const gap = p.RequiredFTE - assigned;
+                const gapClass = gap > 1 ? 'status-overload' : gap > 0 ? 'status-low' : 'status-available';
+                const typeClass = p.ProjectType === 'Active' ? 'status-active' : 'status-planned';
+                const probClass = p.Probability >= 80 ? 'prob-high' : p.Probability >= 50 ? 'prob-medium' : 'prob-low';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${p.ProjectName}</td>
+                    <td><span class="status-badge ${typeClass}">${p.ProjectType}</span></td>
+                    <td><span class="prob-badge ${probClass}">${p.Probability}%</span></td>
+                    <td>${p.RequiredFTE}</td>
+                    <td>${assigned.toFixed(1)}</td>
+                    <td><span class="status-badge ${gapClass}">${gap > 0 ? '+' : ''}${gap.toFixed(1)}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
         }
 
         function renderGanttChart() {
             const container = document.getElementById('ganttContainer');
 
-            // Get date range
-            let minDate = new Date('2025-12-31');
+            let minDate = new Date('2026-12-31');
             let maxDate = new Date('2024-01-01');
 
             filteredData.projects.forEach(p => {
@@ -1476,7 +1503,6 @@
                 if (end > maxDate) maxDate = end;
             });
 
-            // Generate months
             const months = [];
             const current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
             while (current <= maxDate) {
@@ -1486,18 +1512,19 @@
 
             const totalDays = (maxDate - minDate) / (1000 * 60 * 60 * 24);
 
-            // Build HTML
             let html = '<div class="gantt-chart">';
-
-            // Month headers
-            html += '<div class="gantt-months">';
+            html += '<div class="gantt-header">';
             months.forEach(m => {
                 html += `<div class="gantt-month">${m.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}</div>`;
             });
             html += '</div>';
 
-            // Project rows
-            filteredData.projects.forEach(p => {
+            const sortedProjects = [...filteredData.projects].sort((a, b) => {
+                if (a.ProjectType !== b.ProjectType) return a.ProjectType === 'Active' ? -1 : 1;
+                return new Date(a.StartDate) - new Date(b.StartDate);
+            });
+
+            sortedProjects.forEach(p => {
                 const start = new Date(p.StartDate);
                 const end = new Date(p.EndDate);
                 const startOffset = Math.max(0, (start - minDate) / (1000 * 60 * 60 * 24));
@@ -1506,14 +1533,18 @@
                 const leftPercent = (startOffset / totalDays) * 100;
                 const widthPercent = (duration / totalDays) * 100;
 
-                const statusClass = p.Status.toLowerCase().replace(' ', '-');
+                const barClass = p.ProjectType === 'Active' ? 'active' : 'planned';
+                const probLabel = p.ProjectType === 'Planned' ? ` (${p.Probability}%)` : '';
 
                 html += `
                     <div class="gantt-row">
-                        <div class="gantt-label">${p.ProjectName}</div>
+                        <div class="gantt-label">
+                            <span class="status-badge ${p.ProjectType === 'Active' ? 'status-active' : 'status-planned'}" style="font-size:0.65rem;padding:0.125rem 0.375rem;">${p.ProjectType}</span>
+                            ${p.ProjectName.substring(0, 18)}
+                        </div>
                         <div class="gantt-bars">
-                            <div class="gantt-bar ${statusClass}" style="left: ${leftPercent}%; width: ${widthPercent}%;">
-                                ${p.Status}
+                            <div class="gantt-bar ${barClass}" style="left: ${leftPercent}%; width: ${widthPercent}%;">
+                                ${p.RequiredFTE} FTE${probLabel}
                             </div>
                         </div>
                     </div>
