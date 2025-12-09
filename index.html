@@ -1092,6 +1092,17 @@
             renderDashboard();
         }
 
+        // Helper function to sort months chronologically (e.g., "Jan-2025", "Feb-2025")
+        function sortMonthsChronologically(months) {
+            const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return months.sort((a, b) => {
+                const [monthA, yearA] = a.split('-');
+                const [monthB, yearB] = b.split('-');
+                if (yearA !== yearB) return parseInt(yearA) - parseInt(yearB);
+                return monthOrder.indexOf(monthA) - monthOrder.indexOf(monthB);
+            });
+        }
+
         function renderDashboard() {
             updateMetrics();
             renderPipelineChart();
@@ -1215,7 +1226,7 @@
             const ctx = document.getElementById('aggregateUtilChart').getContext('2d');
             if (charts.aggregateUtil) charts.aggregateUtil.destroy();
 
-            const months = [...new Set(rawData.allocations.map(a => a.Month))].sort();
+            const months = sortMonthsChronologically([...new Set(rawData.allocations.map(a => a.Month))]);
             const totalCapacity = filteredData.resources.length * 100; // 100% per resource
 
             const demandByMonth = {};
@@ -1301,7 +1312,7 @@
             const ctx = document.getElementById('projectedRevenueChart').getContext('2d');
             if (charts.projectedRevenue) charts.projectedRevenue.destroy();
 
-            const months = [...new Set(rawData.allocations.map(a => a.Month))].sort();
+            const months = sortMonthsChronologically([...new Set(rawData.allocations.map(a => a.Month))]);
             const revenueByMonth = {};
             months.forEach(m => { revenueByMonth[m] = 0; });
 
@@ -1442,7 +1453,7 @@
             const thead = table.querySelector('thead');
             const tbody = table.querySelector('tbody');
 
-            const months = [...new Set(rawData.allocations.map(a => a.Month))].sort();
+            const months = sortMonthsChronologically([...new Set(rawData.allocations.map(a => a.Month))]);
 
             thead.innerHTML = `<tr><th>Resource</th><th>Skill</th>${months.map(m => `<th>${m}</th>`).join('')}<th>Avg</th></tr>`;
 
