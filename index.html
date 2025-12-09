@@ -417,9 +417,14 @@
 
         .heatmap-cell {
             border-radius: 4px;
-            padding: 0.375rem;
+            padding: 0.5rem 0.375rem;
             font-weight: 600;
-            min-width: 50px;
+            min-width: 65px;
+            min-height: 42px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .heatmap-low { background: #fee2e2; color: #991b1b; }
@@ -428,6 +433,46 @@
         .heatmap-high { background: #dbeafe; color: #1e40af; }
         .heatmap-overload { background: #dc2626; color: white; }
         .heatmap-available { background: #f1f5f9; color: #64748b; }
+
+        /* Project tags in heatmap */
+        .heatmap-percent {
+            font-weight: 600;
+            font-size: 0.85rem;
+            line-height: 1;
+        }
+
+        .heatmap-projects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            margin-top: 3px;
+            justify-content: center;
+        }
+
+        .proj-tag {
+            font-size: 0.55rem;
+            padding: 1px 3px;
+            border-radius: 3px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            cursor: help;
+            text-transform: uppercase;
+        }
+
+        .proj-active {
+            background: rgba(22, 101, 52, 0.2);
+            color: #166534;
+        }
+
+        .proj-planned {
+            background: rgba(30, 64, 175, 0.2);
+            color: #1e40af;
+        }
+
+        .heatmap-overload .proj-tag {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
 
         /* Data Table */
         .data-table-container {
@@ -1260,32 +1305,16 @@
             const revenueByMonth = {};
             months.forEach(m => { revenueByMonth[m] = 0; });
 
-            // Calculate revenue per month based on project budgets and probability
-            // Distribute budget evenly across project duration months
-            filteredData.projects.forEach(p => {
-                const startDate = new Date(p.StartDate);
-                const endDate = new Date(p.EndDate);
-                const projectMonths = [];
-
-                // Find which months this project spans
-                months.forEach(m => {
-                    const [monthStr, yearStr] = m.split('-');
-                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    const monthIdx = monthNames.indexOf(monthStr);
-                    const year = parseInt('20' + yearStr);
-                    const monthDate = new Date(year, monthIdx, 15);
-
-                    if (monthDate >= startDate && monthDate <= endDate) {
-                        projectMonths.push(m);
-                    }
-                });
-
-                // Distribute budget across months, weighted by probability
-                if (projectMonths.length > 0) {
-                    const monthlyRevenue = (p.Budget * (p.Probability / 100)) / projectMonths.length;
-                    projectMonths.forEach(m => {
-                        revenueByMonth[m] = (revenueByMonth[m] || 0) + monthlyRevenue;
-                    });
+            // Calculate revenue: CostRate × AllocationPercent × HoursPerWeek × 4.33 weeks/month
+            filteredData.allocations.forEach(a => {
+                const resource = rawData.resources.find(r => r.ResourceID === a.ResourceID);
+                const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
+                if (resource && project) {
+                    const prob = project.Probability / 100;
+                    const weeksPerMonth = 4.33;
+                    // Revenue = CostRate × (AllocationPercent/100) × HoursPerWeek × weeksPerMonth × probability
+                    const monthlyRevenue = resource.CostRate * (a.AllocationPercent / 100) * resource.HoursPerWeek * weeksPerMonth * prob;
+                    revenueByMonth[a.Month] = (revenueByMonth[a.Month] || 0) + monthlyRevenue;
                 }
             });
 
@@ -1417,15 +1446,35 @@
 
             thead.innerHTML = `<tr><th>Resource</th><th>Skill</th>${months.map(m => `<th>${m}</th>`).join('')}<th>Avg</th></tr>`;
 
+            // Track both utilization and projects per resource per month
             const utilization = {};
+            const projectsByResourceMonth = {};
+
             filteredData.resources.forEach(r => {
                 utilization[r.ResourceID] = {};
-                months.forEach(m => { utilization[r.ResourceID][m] = 0; });
+                projectsByResourceMonth[r.ResourceID] = {};
+                months.forEach(m => {
+                    utilization[r.ResourceID][m] = 0;
+                    projectsByResourceMonth[r.ResourceID][m] = [];
+                });
             });
 
             filteredData.allocations.forEach(a => {
                 if (utilization[a.ResourceID]) {
                     utilization[a.ResourceID][a.Month] = (utilization[a.ResourceID][a.Month] || 0) + a.AllocationPercent;
+
+                    // Track projects with their allocation %
+                    const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
+                    if (project) {
+                        // Create short project code (first 3-4 chars)
+                        const shortName = project.ProjectName.split(' ').map(w => w[0]).join('').substring(0, 3);
+                        projectsByResourceMonth[a.ResourceID][a.Month].push({
+                            code: shortName,
+                            name: project.ProjectName,
+                            percent: a.AllocationPercent,
+                            type: project.ProjectType
+                        });
+                    }
                 }
             });
 
@@ -1442,7 +1491,21 @@
                     ${months.map(m => {
                         const val = utilization[r.ResourceID][m] || 0;
                         const cls = getHeatmapClass(val);
-                        return `<td><div class="heatmap-cell ${cls}">${val}%</div></td>`;
+                        const projects = projectsByResourceMonth[r.ResourceID][m] || [];
+
+                        // Build project tags
+                        let projectTags = '';
+                        if (projects.length > 0) {
+                            projectTags = projects.map(p => {
+                                const typeClass = p.type === 'Active' ? 'proj-active' : 'proj-planned';
+                                return `<span class="proj-tag ${typeClass}" title="${p.name}: ${p.percent}%">${p.code}</span>`;
+                            }).join('');
+                        }
+
+                        return `<td><div class="heatmap-cell ${cls}">
+                            <div class="heatmap-percent">${val}%</div>
+                            <div class="heatmap-projects">${projectTags}</div>
+                        </div></td>`;
                     }).join('')}
                     <td><div class="heatmap-cell ${getHeatmapClass(avg)}">${Math.round(avg)}%</div></td>
                 `;
