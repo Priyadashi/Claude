@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ERP Hub Resource Planning Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -19,44 +18,34 @@
             --danger: #dc2626;
             --danger-light: #ef4444;
             --info: #0284c7;
-            --info-light: #0ea5e9;
-
             --bg-page: #f8fafc;
             --bg-card: #ffffff;
             --bg-hover: #f1f5f9;
             --bg-input: #f8fafc;
-
             --text-primary: #1e293b;
             --text-secondary: #475569;
             --text-muted: #94a3b8;
-
             --border: #e2e8f0;
             --border-light: #f1f5f9;
-
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-page);
             color: var(--text-primary);
             min-height: 100vh;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         /* Header */
         .header {
             background: var(--bg-card);
-            padding: 1rem 2rem;
+            padding: 0.75rem 2rem;
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
@@ -79,60 +68,114 @@
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: white;
         }
 
         .logo-text {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--text-primary);
         }
 
-        .logo-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .file-upload {
+        .header-actions {
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
-        .file-input { display: none; }
-
-        .file-btn {
-            background: var(--primary);
-            color: white;
-            padding: 0.625rem 1.25rem;
-            border-radius: 8px;
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
             border: none;
             cursor: pointer;
             font-weight: 500;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             transition: all 0.2s ease;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
-        .file-btn:hover {
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
             background: var(--primary-dark);
-            box-shadow: var(--shadow-md);
         }
 
-        .file-name {
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid var(--border);
             color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-muted);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+        }
+
+        .tabs-list {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+        }
+
+        .tab-btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 500;
             font-size: 0.875rem;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-secondary);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
         /* Main Content */
@@ -142,119 +185,193 @@
             padding: 1.5rem 2rem;
         }
 
-        /* Filters Section */
-        .filters-section {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
+        .tab-panel {
+            display: none;
         }
 
-        .filters-header {
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.25rem;
+        }
+
+        .card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
         }
 
-        .filters-title {
-            font-size: 0.875rem;
+        .card-title {
+            font-size: 0.95rem;
             font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.125rem;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .data-table th {
+            background: var(--bg-page);
             color: var(--text-secondary);
+            font-weight: 600;
+            padding: 0.625rem 0.75rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .filters-grid {
+        .data-table td {
+            padding: 0.625rem 0.75rem;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .data-table input, .data-table select {
+            width: 100%;
+            padding: 0.375rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            background: white;
+        }
+
+        .data-table input:focus, .data-table select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        }
+
+        .data-table input[type="number"] {
+            width: 70px;
+        }
+
+        /* Form Styles */
+        .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
+            margin-bottom: 1rem;
         }
 
-        .filter-group {
+        .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.375rem;
+            gap: 0.35rem;
         }
 
-        .filter-label {
+        .form-label {
             font-size: 0.75rem;
-            color: var(--text-muted);
             font-weight: 500;
-        }
-
-        .filter-select {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 0.5rem 0.75rem;
-            color: var(--text-primary);
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .filter-select:hover, .filter-select:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-
-        .reset-btn {
-            background: var(--bg-hover);
-            border: 1px solid var(--border);
             color: var(--text-secondary);
-            padding: 0.5rem 1rem;
+        }
+
+        .form-input, .form-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
             border-radius: 6px;
-            cursor: pointer;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Allocation Grid */
+        .allocation-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .allocation-row {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.875rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 120px 100px 140px auto;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .allocation-row select, .allocation-row input {
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 5px;
             font-size: 0.8rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
         }
 
-        .reset-btn:hover {
-            background: var(--border);
-            color: var(--text-primary);
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
         }
 
-        /* Metrics Cards */
+        .badge-active { background: #dcfce7; color: #166534; }
+        .badge-planned { background: #dbeafe; color: #1e40af; }
+        .badge-high { background: #dcfce7; color: #166534; }
+        .badge-medium { background: #fef3c7; color: #92400e; }
+        .badge-low { background: #fee2e2; color: #991b1b; }
+
+        /* Dashboard Specific */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .metric-card {
             background: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.25rem;
+            border-radius: 10px;
+            padding: 1rem;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-        }
-
-        .metric-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .metric-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
         }
 
         .metric-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
         }
 
         .metric-card.primary .metric-icon { background: #eef2ff; }
@@ -264,7 +381,7 @@
         .metric-card.danger .metric-icon { background: #fef2f2; }
 
         .metric-value {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
             line-height: 1;
             margin-bottom: 0.25rem;
@@ -278,62 +395,28 @@
 
         .metric-label {
             color: var(--text-secondary);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
         }
 
         .metric-subtitle {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
-            margin-top: 0.25rem;
+            margin-top: 0.2rem;
         }
 
-        /* Section Headers */
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .section-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .section-badge {
-            background: var(--primary);
-            color: white;
-            font-size: 0.7rem;
-            padding: 0.125rem 0.5rem;
-            border-radius: 10px;
-            font-weight: 500;
-        }
-
-        /* Charts Grid */
         .charts-row {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .charts-row-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
         }
 
         .chart-card {
             background: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.25rem;
+            border-radius: 10px;
+            padding: 1rem;
             border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
         }
 
         .chart-card.full-width {
@@ -341,47 +424,26 @@
         }
 
         .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .chart-title {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--text-primary);
         }
 
         .chart-subtitle {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            margin-top: 0.125rem;
         }
 
         .chart-container {
+            height: 260px;
             position: relative;
-            height: 280px;
         }
 
-        .chart-container.tall {
-            height: 350px;
-        }
-
-        /* Probability Badge */
-        .prob-badge {
-            display: inline-block;
-            padding: 0.125rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .prob-high { background: #dcfce7; color: #166534; }
-        .prob-medium { background: #fef3c7; color: #92400e; }
-        .prob-low { background: #fee2e2; color: #991b1b; }
-
-        /* Heatmap Table */
+        /* Heatmap */
         .heatmap-container {
             overflow-x: auto;
         }
@@ -389,259 +451,59 @@
         .heatmap-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
-        .heatmap-table th,
-        .heatmap-table td {
-            padding: 0.625rem;
+        .heatmap-table th, .heatmap-table td {
+            padding: 0.5rem;
             text-align: center;
             border: 1px solid var(--border);
         }
 
         .heatmap-table th {
             background: var(--bg-page);
-            color: var(--text-secondary);
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
         }
 
-        .heatmap-table th:first-child,
-        .heatmap-table td:first-child {
+        .heatmap-table td:first-child, .heatmap-table th:first-child {
             text-align: left;
-            font-weight: 500;
-            background: var(--bg-card);
             position: sticky;
             left: 0;
+            background: var(--bg-card);
+            font-weight: 500;
         }
 
         .heatmap-cell {
             border-radius: 4px;
-            padding: 0.5rem 0.375rem;
+            padding: 0.4rem 0.3rem;
             font-weight: 600;
-            min-width: 65px;
-            min-height: 42px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            min-width: 55px;
+            font-size: 0.75rem;
         }
 
+        .heatmap-available { background: #f1f5f9; color: #64748b; }
         .heatmap-low { background: #fee2e2; color: #991b1b; }
         .heatmap-medium { background: #fef3c7; color: #92400e; }
         .heatmap-optimal { background: #dcfce7; color: #166534; }
         .heatmap-high { background: #dbeafe; color: #1e40af; }
         .heatmap-overload { background: #dc2626; color: white; }
-        .heatmap-available { background: #f1f5f9; color: #64748b; }
 
-        /* Project tags in heatmap */
-        .heatmap-percent {
-            font-weight: 600;
-            font-size: 0.85rem;
-            line-height: 1;
-        }
-
-        .heatmap-projects {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2px;
-            margin-top: 3px;
-            justify-content: center;
-        }
-
-        .proj-tag {
-            font-size: 0.55rem;
-            padding: 1px 3px;
-            border-radius: 3px;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            cursor: help;
-            text-transform: uppercase;
-        }
-
-        .proj-active {
-            background: rgba(22, 101, 52, 0.2);
-            color: #166534;
-        }
-
-        .proj-planned {
-            background: rgba(30, 64, 175, 0.2);
-            color: #1e40af;
-        }
-
-        .heatmap-overload .proj-tag {
-            background: rgba(255, 255, 255, 0.3);
-            color: white;
-        }
-
-        /* Data Table */
-        .data-table-container {
-            overflow-x: auto;
-            max-height: 350px;
-            overflow-y: auto;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-
-        .data-table th {
-            background: var(--bg-page);
-            color: var(--text-secondary);
-            font-weight: 600;
-            padding: 0.75rem;
-            text-align: left;
-            position: sticky;
-            top: 0;
-            border-bottom: 2px solid var(--border);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .data-table td {
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .data-table tr:hover {
-            background: var(--bg-hover);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.625rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .status-active { background: #dcfce7; color: #166534; }
-        .status-planned { background: #dbeafe; color: #1e40af; }
-        .status-available { background: #f0fdf4; color: #15803d; }
-        .status-low { background: #fef3c7; color: #92400e; }
-        .status-overload { background: #fee2e2; color: #991b1b; }
-
-        /* Pipeline Chart Styling */
-        .pipeline-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            background: var(--bg-page);
-            border-left: 4px solid;
-        }
-
-        .pipeline-item.active { border-color: var(--success); }
-        .pipeline-item.planned { border-color: var(--info); }
-
-        .pipeline-info {
-            flex: 1;
-        }
-
-        .pipeline-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-        }
-
-        .pipeline-meta {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .pipeline-prob {
-            text-align: right;
-        }
-
-        /* Gantt Chart */
-        .gantt-container {
-            overflow-x: auto;
-        }
-
-        .gantt-chart {
-            min-width: 900px;
-        }
-
-        .gantt-header {
-            display: flex;
-            padding-left: 200px;
-            margin-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 0.5rem;
-        }
-
-        .gantt-month {
-            flex: 1;
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .gantt-row {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .gantt-label {
-            width: 200px;
-            flex-shrink: 0;
-            font-size: 0.8rem;
-            font-weight: 500;
-            padding-right: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .gantt-bars {
-            flex: 1;
-            position: relative;
-            height: 28px;
-            background: var(--bg-page);
-            border-radius: 4px;
-        }
-
-        .gantt-bar {
-            position: absolute;
-            height: 22px;
-            top: 3px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            padding: 0 0.5rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: white;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .gantt-bar.active { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
-        .gantt-bar.planned { background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); opacity: 0.8; }
-
-        /* Legend */
         .legend {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             flex-wrap: wrap;
-            margin-top: 1rem;
-            padding-top: 1rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
             border-top: 1px solid var(--border);
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
+            gap: 0.4rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
         }
 
@@ -651,49 +513,97 @@
             border-radius: 3px;
         }
 
-        /* Upload Prompt */
-        .upload-prompt {
+        /* Empty State */
+        .empty-state {
             text-align: center;
-            padding: 4rem 2rem;
-            background: var(--bg-card);
-            border-radius: 16px;
-            border: 2px dashed var(--border);
+            padding: 3rem 2rem;
+            color: var(--text-muted);
         }
 
-        .upload-prompt-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .empty-state-icon {
             font-size: 2.5rem;
-            margin: 0 auto 1.5rem;
-            color: white;
+            margin-bottom: 0.75rem;
         }
 
-        .upload-prompt h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .upload-prompt p {
+        .empty-state h3 {
+            font-size: 1rem;
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--text-primary);
+            color: white;
+            padding: 0.875rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.show { display: block; }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Quick Add Form */
+        .quick-add {
+            background: var(--bg-page);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px dashed var(--border);
+        }
+
+        .quick-add-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Filters */
+        .filters-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.4rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            background: white;
+            min-width: 140px;
         }
 
         /* Responsive */
         @media (max-width: 1200px) {
-            .charts-row, .charts-row-3 { grid-template-columns: 1fr; }
+            .charts-row { grid-template-columns: 1fr; }
             .metrics-grid { grid-template-columns: repeat(3, 1fr); }
+            .allocation-row { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 768px) {
-            .header-content { flex-direction: column; gap: 1rem; }
-            .filters-grid { grid-template-columns: 1fr 1fr; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .header-content { flex-direction: column; gap: 0.75rem; }
+            .tabs-list { overflow-x: auto; }
         }
     </style>
 </head>
@@ -702,492 +612,651 @@
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">📊</div>
-                <div>
-                    <div class="logo-text">ERP Hub Resource Planning Dashboard</div>
-                    <div class="logo-subtitle">Forward-Looking Capacity & Pipeline Analysis</div>
-                </div>
+                <div class="logo-text">ERP Hub Resource Planning</div>
             </div>
-            <div class="file-upload">
-                <div class="file-input-wrapper">
-                    <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls">
-                    <button class="file-btn" onclick="document.getElementById('fileInput').click()">
-                        📁 Load Excel File
-                    </button>
-                </div>
-                <span class="file-name" id="fileName">No file loaded</span>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="importData()">
+                    📥 Import
+                </button>
+                <button class="btn btn-success" onclick="saveFile()">
+                    💾 Save File
+                </button>
             </div>
         </div>
     </header>
 
-    <main class="main-content" id="mainContent">
-        <div class="upload-prompt" id="uploadPrompt">
-            <div class="upload-prompt-icon">📁</div>
-            <h2>Load Your Planning Data</h2>
-            <p>Upload your resource_planning_data.xlsx to see capacity forecasts and pipeline analysis</p>
-            <button class="file-btn" onclick="document.getElementById('fileInput').click()">
-                📁 Select Excel File
-            </button>
+    <nav class="tabs">
+        <div class="tabs-list">
+            <button class="tab-btn active" onclick="switchTab('resources')">👥 Resources</button>
+            <button class="tab-btn" onclick="switchTab('projects')">📁 Projects</button>
+            <button class="tab-btn" onclick="switchTab('allocations')">📅 Allocations</button>
+            <button class="tab-btn" onclick="switchTab('dashboard')">📊 Dashboard</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- RESOURCES TAB -->
+        <div id="tab-resources" class="tab-panel active">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Team Resources</div>
+                        <div class="card-subtitle">Manage your team members and their skills</div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="addResource()">+ Add Resource</button>
+                </div>
+                <div class="card-body">
+                    <table class="data-table" id="resourcesTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Primary Skill</th>
+                                <th>Secondary Skill</th>
+                                <th>Status</th>
+                                <th>Hours/Week</th>
+                                <th>Cost Rate ($/hr)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resourcesBody"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div id="dashboardContent" style="display: none;">
-            <!-- Filters Section -->
-            <section class="filters-section">
-                <div class="filters-header">
-                    <span class="filters-title">Filters</span>
-                    <button class="reset-btn" onclick="resetFilters()">Reset All</button>
+        <!-- PROJECTS TAB -->
+        <div id="tab-projects" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Projects Portfolio</div>
+                        <div class="card-subtitle">Active and planned projects in your pipeline</div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="addProject()">+ Add Project</button>
                 </div>
-                <div class="filters-grid">
-                    <div class="filter-group">
-                        <label class="filter-label">Resource</label>
-                        <select class="filter-select" id="filterResource" onchange="applyFilters()">
+                <div class="card-body">
+                    <table class="data-table" id="projectsTable">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Probability %</th>
+                                <th>Priority</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Required FTE</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALLOCATIONS TAB -->
+        <div id="tab-allocations" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Resource Allocations</div>
+                        <div class="card-subtitle">Map resources to projects by month</div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="addAllocation()">+ Add Allocation</button>
+                </div>
+                <div class="card-body">
+                    <div class="filters-bar">
+                        <select class="filter-select" id="allocFilterResource" onchange="renderAllocations()">
                             <option value="">All Resources</option>
                         </select>
-                    </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Project</label>
-                        <select class="filter-select" id="filterProject" onchange="applyFilters()">
+                        <select class="filter-select" id="allocFilterProject" onchange="renderAllocations()">
                             <option value="">All Projects</option>
                         </select>
-                    </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Primary Skill</label>
-                        <select class="filter-select" id="filterSkill" onchange="applyFilters()">
-                            <option value="">All Skills</option>
+                        <select class="filter-select" id="allocFilterMonth" onchange="renderAllocations()">
+                            <option value="">All Months</option>
                         </select>
                     </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Project Type</label>
-                        <select class="filter-select" id="filterType" onchange="applyFilters()">
-                            <option value="">All Types</option>
-                            <option value="Active">Active</option>
-                            <option value="Planned">Planned</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Time Period</label>
-                        <select class="filter-select" id="filterPeriod" onchange="applyFilters()">
-                            <option value="">All Periods</option>
-                        </select>
-                    </div>
+                    <div class="allocation-grid" id="allocationsGrid"></div>
                 </div>
-            </section>
+            </div>
+        </div>
 
-            <!-- Key Metrics -->
+        <!-- DASHBOARD TAB -->
+        <div id="tab-dashboard" class="tab-panel">
+            <div class="filters-bar">
+                <select class="filter-select" id="dashFilterSkill" onchange="renderDashboard()">
+                    <option value="">All Skills</option>
+                </select>
+                <select class="filter-select" id="dashFilterType" onchange="renderDashboard()">
+                    <option value="">All Project Types</option>
+                    <option value="Active">Active</option>
+                    <option value="Planned">Planned</option>
+                </select>
+                <button class="btn btn-outline btn-sm" onclick="resetDashFilters()">Reset Filters</button>
+            </div>
+
             <section class="metrics-grid" id="metricsSection">
                 <div class="metric-card primary">
-                    <div class="metric-header">
-                        <div class="metric-icon">📂</div>
-                    </div>
+                    <div class="metric-icon">📂</div>
                     <div class="metric-value" id="metricActiveProjects">0</div>
                     <div class="metric-label">Active Projects</div>
-                    <div class="metric-subtitle">Confirmed & in progress</div>
+                    <div class="metric-subtitle">Confirmed</div>
                 </div>
                 <div class="metric-card info">
-                    <div class="metric-header">
-                        <div class="metric-icon">📋</div>
-                    </div>
+                    <div class="metric-icon">📋</div>
                     <div class="metric-value" id="metricPlannedProjects">0</div>
                     <div class="metric-label">Planned Projects</div>
                     <div class="metric-subtitle" id="metricWeightedFTE">0 weighted FTE</div>
                 </div>
                 <div class="metric-card success">
-                    <div class="metric-header">
-                        <div class="metric-icon">👥</div>
-                    </div>
+                    <div class="metric-icon">👥</div>
                     <div class="metric-value" id="metricResources">0</div>
                     <div class="metric-label">Total Resources</div>
-                    <div class="metric-subtitle" id="metricAvgUtil">0% avg utilization</div>
+                    <div class="metric-subtitle" id="metricAvgUtil">0% avg util</div>
                 </div>
                 <div class="metric-card warning">
-                    <div class="metric-header">
-                        <div class="metric-icon">⚠️</div>
-                    </div>
+                    <div class="metric-icon">⚠️</div>
                     <div class="metric-value" id="metricAvailable">0</div>
-                    <div class="metric-label">Available Capacity</div>
-                    <div class="metric-subtitle">Resources under 50%</div>
+                    <div class="metric-label">Available</div>
+                    <div class="metric-subtitle">Under 50%</div>
                 </div>
                 <div class="metric-card danger">
-                    <div class="metric-header">
-                        <div class="metric-icon">🔥</div>
-                    </div>
+                    <div class="metric-icon">🔥</div>
                     <div class="metric-value" id="metricOverloaded">0</div>
                     <div class="metric-label">Overloaded</div>
-                    <div class="metric-subtitle">Resources over 100%</div>
+                    <div class="metric-subtitle">Over 100%</div>
                 </div>
             </section>
 
-            <!-- Row 1: Pipeline & Utilization Forecast -->
             <section class="charts-row">
                 <div class="chart-card">
                     <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Project Pipeline</div>
-                            <div class="chart-subtitle">Active and planned projects with probability</div>
-                        </div>
+                        <div class="chart-title">Project Pipeline</div>
+                        <div class="chart-subtitle">Active and planned projects by FTE</div>
                     </div>
-                    <div class="chart-container tall">
-                        <canvas id="pipelineChart"></canvas>
-                    </div>
+                    <div class="chart-container"><canvas id="pipelineChart"></canvas></div>
                 </div>
                 <div class="chart-card">
                     <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Aggregate Utilization Forecast</div>
-                            <div class="chart-subtitle">Team capacity vs demand over time</div>
-                        </div>
+                        <div class="chart-title">Aggregate Utilization</div>
+                        <div class="chart-subtitle">Team capacity over time</div>
                     </div>
-                    <div class="chart-container tall">
-                        <canvas id="aggregateUtilChart"></canvas>
-                    </div>
+                    <div class="chart-container"><canvas id="utilizationChart"></canvas></div>
                 </div>
             </section>
 
-            <!-- Row 2: Projected Revenue & FTE Gap -->
             <section class="charts-row">
                 <div class="chart-card">
                     <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Projected Revenue</div>
-                            <div class="chart-subtitle">Monthly revenue forecast (probability-weighted)</div>
-                        </div>
+                        <div class="chart-title">Projected Revenue</div>
+                        <div class="chart-subtitle">Monthly revenue forecast</div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="projectedRevenueChart"></canvas>
-                    </div>
+                    <div class="chart-container"><canvas id="revenueChart"></canvas></div>
                 </div>
                 <div class="chart-card">
                     <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Supply vs Demand Gap</div>
-                            <div class="chart-subtitle">Available capacity vs projected need by skill</div>
-                        </div>
+                        <div class="chart-title">Supply vs Demand</div>
+                        <div class="chart-subtitle">Capacity gap by skill</div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="supplyDemandChart"></canvas>
-                    </div>
+                    <div class="chart-container"><canvas id="supplyDemandChart"></canvas></div>
                 </div>
             </section>
 
-            <!-- Resource Utilization Heatmap -->
             <section class="charts-row">
                 <div class="chart-card full-width">
                     <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Resource Utilization Forecast</div>
-                            <div class="chart-subtitle">Projected monthly allocation per resource - identify who should go where</div>
-                        </div>
+                        <div class="chart-title">Resource Utilization Heatmap</div>
+                        <div class="chart-subtitle">Monthly allocation per resource</div>
                     </div>
                     <div class="heatmap-container">
-                        <table class="heatmap-table" id="utilizationHeatmap">
+                        <table class="heatmap-table" id="heatmapTable">
                             <thead></thead>
                             <tbody></tbody>
                         </table>
                     </div>
                     <div class="legend">
-                        <div class="legend-item">
-                            <div class="legend-color heatmap-available"></div>
-                            <span>Unallocated (0%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color heatmap-low"></div>
-                            <span>Low (&lt;50%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color heatmap-medium"></div>
-                            <span>Medium (50-70%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color heatmap-optimal"></div>
-                            <span>Optimal (70-90%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color heatmap-high"></div>
-                            <span>High (90-100%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color heatmap-overload"></div>
-                            <span>Overloaded (&gt;100%)</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Row 3: Available Resources & Project Assignments -->
-            <section class="charts-row">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Available Resources for Staffing</div>
-                            <div class="chart-subtitle">Resources with capacity for new projects</div>
-                        </div>
-                    </div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="availableResourcesTable">
-                            <thead>
-                                <tr>
-                                    <th>Resource</th>
-                                    <th>Skill</th>
-                                    <th>Current Util</th>
-                                    <th>Available %</th>
-                                    <th>Recommendation</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Projects Needing Resources</div>
-                            <div class="chart-subtitle">Planned projects with staffing gaps</div>
-                        </div>
-                    </div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="projectNeedsTable">
-                            <thead>
-                                <tr>
-                                    <th>Project</th>
-                                    <th>Type</th>
-                                    <th>Probability</th>
-                                    <th>Required FTE</th>
-                                    <th>Assigned</th>
-                                    <th>Gap</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Gantt Chart -->
-            <section class="charts-row">
-                <div class="chart-card full-width">
-                    <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Project Timeline</div>
-                            <div class="chart-subtitle">Active and planned project schedule</div>
-                        </div>
-                    </div>
-                    <div class="gantt-container" id="ganttContainer"></div>
-                    <div class="legend">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);"></div>
-                            <span>Active (100%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); opacity: 0.8;"></div>
-                            <span>Planned (with probability)</span>
-                        </div>
+                        <div class="legend-item"><div class="legend-color heatmap-available"></div><span>0%</span></div>
+                        <div class="legend-item"><div class="legend-color heatmap-low"></div><span>&lt;50%</span></div>
+                        <div class="legend-item"><div class="legend-color heatmap-medium"></div><span>50-70%</span></div>
+                        <div class="legend-item"><div class="legend-color heatmap-optimal"></div><span>70-90%</span></div>
+                        <div class="legend-item"><div class="legend-color heatmap-high"></div><span>90-100%</span></div>
+                        <div class="legend-item"><div class="legend-color heatmap-overload"></div><span>&gt;100%</span></div>
                     </div>
                 </div>
             </section>
         </div>
     </main>
 
+    <div class="toast" id="toast"></div>
+
+    <!-- EMBEDDED DATA - This gets updated when you save -->
+    <script type="application/json" id="appData">
+{
+    "resources": [
+        {"id": "R001", "name": "Alice Johnson", "primarySkill": "Frontend", "secondarySkill": "UI/UX", "status": "Active", "hoursPerWeek": 40, "costRate": 150},
+        {"id": "R002", "name": "Bob Smith", "primarySkill": "Backend", "secondarySkill": "DevOps", "status": "Active", "hoursPerWeek": 40, "costRate": 160},
+        {"id": "R003", "name": "Carol Williams", "primarySkill": "Full Stack", "secondarySkill": "Backend", "status": "Active", "hoursPerWeek": 40, "costRate": 175}
+    ],
+    "projects": [
+        {"id": "P001", "name": "E-Commerce Platform", "client": "RetailCorp", "type": "Active", "probability": 100, "priority": "High", "startDate": "2025-01-15", "endDate": "2025-06-30", "requiredFTE": 3},
+        {"id": "P002", "name": "Analytics Dashboard", "client": "DataDriven Inc", "type": "Planned", "probability": 75, "priority": "Medium", "startDate": "2025-03-01", "endDate": "2025-07-31", "requiredFTE": 2}
+    ],
+    "allocations": [
+        {"id": "A001", "resourceId": "R001", "projectId": "P001", "month": "Jan-2025", "percent": 80, "role": "Lead Developer"},
+        {"id": "A002", "resourceId": "R002", "projectId": "P001", "month": "Jan-2025", "percent": 60, "role": "Backend Dev"},
+        {"id": "A003", "resourceId": "R001", "projectId": "P001", "month": "Feb-2025", "percent": 80, "role": "Lead Developer"},
+        {"id": "A004", "resourceId": "R002", "projectId": "P001", "month": "Feb-2025", "percent": 70, "role": "Backend Dev"},
+        {"id": "A005", "resourceId": "R003", "projectId": "P001", "month": "Feb-2025", "percent": 50, "role": "Full Stack Dev"}
+    ]
+}
+    </script>
+
     <script>
-        // Global data storage
-        let rawData = { resources: [], projects: [], allocations: [] };
-        let filteredData = { resources: [], projects: [], allocations: [] };
+        // Global Data Store
+        let data = { resources: [], projects: [], allocations: [] };
         let charts = {};
 
-        // File input handler
-        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            renderAll();
+        });
 
-        async function handleFileUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            document.getElementById('fileName').textContent = file.name;
-
+        function loadData() {
             try {
-                const data = await file.arrayBuffer();
-                const workbook = XLSX.read(data);
-
-                rawData.resources = XLSX.utils.sheet_to_json(workbook.Sheets['Resources'] || workbook.Sheets[workbook.SheetNames[0]]);
-                rawData.projects = XLSX.utils.sheet_to_json(workbook.Sheets['Projects'] || workbook.Sheets[workbook.SheetNames[1]]);
-                rawData.allocations = XLSX.utils.sheet_to_json(workbook.Sheets['Allocations'] || workbook.Sheets[workbook.SheetNames[2]]);
-
-                filteredData = JSON.parse(JSON.stringify(rawData));
-                populateFilters();
-
-                document.getElementById('uploadPrompt').style.display = 'none';
-                document.getElementById('dashboardContent').style.display = 'block';
-
-                renderDashboard();
-            } catch (error) {
-                console.error('Error reading file:', error);
-                alert('Error reading file. Please ensure it\'s a valid Excel file.');
+                const jsonEl = document.getElementById('appData');
+                data = JSON.parse(jsonEl.textContent);
+            } catch (e) {
+                console.error('Error loading data:', e);
+                data = { resources: [], projects: [], allocations: [] };
             }
         }
 
-        function populateFilters() {
-            const resourceSelect = document.getElementById('filterResource');
-            resourceSelect.innerHTML = '<option value="">All Resources</option>';
-            rawData.resources.forEach(r => {
-                resourceSelect.innerHTML += `<option value="${r.ResourceID}">${r.ResourceName}</option>`;
-            });
-
-            const projectSelect = document.getElementById('filterProject');
-            projectSelect.innerHTML = '<option value="">All Projects</option>';
-            rawData.projects.forEach(p => {
-                projectSelect.innerHTML += `<option value="${p.ProjectID}">${p.ProjectName}</option>`;
-            });
-
-            const skillSelect = document.getElementById('filterSkill');
-            skillSelect.innerHTML = '<option value="">All Skills</option>';
-            const skills = [...new Set(rawData.resources.map(r => r.PrimarySkill))];
-            skills.forEach(s => {
-                skillSelect.innerHTML += `<option value="${s}">${s}</option>`;
-            });
-
-            const periodSelect = document.getElementById('filterPeriod');
-            periodSelect.innerHTML = '<option value="">All Periods</option>';
-            const periods = [...new Set(rawData.allocations.map(a => a.Month))];
-            periods.forEach(p => {
-                periodSelect.innerHTML += `<option value="${p}">${p}</option>`;
-            });
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        function applyFilters() {
-            const resourceFilter = document.getElementById('filterResource').value;
-            const projectFilter = document.getElementById('filterProject').value;
-            const skillFilter = document.getElementById('filterSkill').value;
-            const typeFilter = document.getElementById('filterType').value;
-            const periodFilter = document.getElementById('filterPeriod').value;
+        // Tab Navigation
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
 
-            filteredData.resources = rawData.resources.filter(r => {
-                if (resourceFilter && r.ResourceID !== resourceFilter) return false;
-                if (skillFilter && r.PrimarySkill !== skillFilter) return false;
-                return true;
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            if (tabName === 'allocations') {
+                populateAllocationFilters();
+                renderAllocations();
+            } else if (tabName === 'dashboard') {
+                populateDashFilters();
+                renderDashboard();
+            }
+        }
+
+        // ID Generators
+        function genId(prefix) {
+            const existing = prefix === 'R' ? data.resources : prefix === 'P' ? data.projects : data.allocations;
+            const nums = existing.map(x => parseInt(x.id.replace(prefix, '')) || 0);
+            const next = (Math.max(0, ...nums) + 1).toString().padStart(3, '0');
+            return prefix + next;
+        }
+
+        // ========== RESOURCES ==========
+        function renderResources() {
+            const tbody = document.getElementById('resourcesBody');
+            if (data.resources.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="empty-state">
+                    <div class="empty-state-icon">👥</div>
+                    <h3>No resources yet</h3>
+                    <p>Add your first team member to get started</p>
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.resources.map(r => `
+                <tr data-id="${r.id}">
+                    <td><input type="text" value="${r.name}" onchange="updateResource('${r.id}', 'name', this.value)"></td>
+                    <td>
+                        <select onchange="updateResource('${r.id}', 'primarySkill', this.value)">
+                            ${skillOptions(r.primarySkill)}
+                        </select>
+                    </td>
+                    <td>
+                        <select onchange="updateResource('${r.id}', 'secondarySkill', this.value)">
+                            <option value="">None</option>
+                            ${skillOptions(r.secondarySkill)}
+                        </select>
+                    </td>
+                    <td>
+                        <select onchange="updateResource('${r.id}', 'status', this.value)">
+                            <option value="Active" ${r.status === 'Active' ? 'selected' : ''}>Active</option>
+                            <option value="Bench" ${r.status === 'Bench' ? 'selected' : ''}>Bench</option>
+                            <option value="Leave" ${r.status === 'Leave' ? 'selected' : ''}>Leave</option>
+                        </select>
+                    </td>
+                    <td><input type="number" value="${r.hoursPerWeek}" onchange="updateResource('${r.id}', 'hoursPerWeek', +this.value)"></td>
+                    <td><input type="number" value="${r.costRate}" onchange="updateResource('${r.id}', 'costRate', +this.value)"></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteResource('${r.id}')">×</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function skillOptions(selected) {
+            const skills = ['Frontend', 'Backend', 'Full Stack', 'DevOps', 'UI/UX', 'QA', 'Data', 'Mobile', 'Cloud', 'Security'];
+            return skills.map(s => `<option value="${s}" ${s === selected ? 'selected' : ''}>${s}</option>`).join('');
+        }
+
+        function addResource() {
+            data.resources.push({
+                id: genId('R'),
+                name: 'New Resource',
+                primarySkill: 'Frontend',
+                secondarySkill: '',
+                status: 'Active',
+                hoursPerWeek: 40,
+                costRate: 100
             });
+            renderResources();
+            showToast('Resource added');
+        }
 
-            filteredData.projects = rawData.projects.filter(p => {
-                if (projectFilter && p.ProjectID !== projectFilter) return false;
-                if (typeFilter && p.ProjectType !== typeFilter) return false;
-                return true;
+        function updateResource(id, field, value) {
+            const r = data.resources.find(x => x.id === id);
+            if (r) r[field] = value;
+        }
+
+        function deleteResource(id) {
+            if (confirm('Delete this resource?')) {
+                data.resources = data.resources.filter(x => x.id !== id);
+                data.allocations = data.allocations.filter(x => x.resourceId !== id);
+                renderResources();
+                showToast('Resource deleted');
+            }
+        }
+
+        // ========== PROJECTS ==========
+        function renderProjects() {
+            const tbody = document.getElementById('projectsBody');
+            if (data.projects.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="empty-state">
+                    <div class="empty-state-icon">📁</div>
+                    <h3>No projects yet</h3>
+                    <p>Add your first project to begin planning</p>
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.projects.map(p => `
+                <tr data-id="${p.id}">
+                    <td><input type="text" value="${p.name}" onchange="updateProject('${p.id}', 'name', this.value)" style="min-width:150px"></td>
+                    <td><input type="text" value="${p.client}" onchange="updateProject('${p.id}', 'client', this.value)"></td>
+                    <td>
+                        <select onchange="updateProject('${p.id}', 'type', this.value)">
+                            <option value="Active" ${p.type === 'Active' ? 'selected' : ''}>Active</option>
+                            <option value="Planned" ${p.type === 'Planned' ? 'selected' : ''}>Planned</option>
+                        </select>
+                    </td>
+                    <td><input type="number" value="${p.probability}" min="0" max="100" onchange="updateProject('${p.id}', 'probability', +this.value)"></td>
+                    <td>
+                        <select onchange="updateProject('${p.id}', 'priority', this.value)">
+                            <option value="High" ${p.priority === 'High' ? 'selected' : ''}>High</option>
+                            <option value="Medium" ${p.priority === 'Medium' ? 'selected' : ''}>Medium</option>
+                            <option value="Low" ${p.priority === 'Low' ? 'selected' : ''}>Low</option>
+                        </select>
+                    </td>
+                    <td><input type="date" value="${p.startDate}" onchange="updateProject('${p.id}', 'startDate', this.value)"></td>
+                    <td><input type="date" value="${p.endDate}" onchange="updateProject('${p.id}', 'endDate', this.value)"></td>
+                    <td><input type="number" value="${p.requiredFTE}" min="0" step="0.5" onchange="updateProject('${p.id}', 'requiredFTE', +this.value)"></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteProject('${p.id}')">×</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function addProject() {
+            const today = new Date();
+            const endDate = new Date(today);
+            endDate.setMonth(endDate.getMonth() + 3);
+
+            data.projects.push({
+                id: genId('P'),
+                name: 'New Project',
+                client: 'Client Name',
+                type: 'Planned',
+                probability: 50,
+                priority: 'Medium',
+                startDate: today.toISOString().split('T')[0],
+                endDate: endDate.toISOString().split('T')[0],
+                requiredFTE: 1
             });
+            renderProjects();
+            showToast('Project added');
+        }
 
-            const resourceIds = filteredData.resources.map(r => r.ResourceID);
-            const projectIds = filteredData.projects.map(p => p.ProjectID);
+        function updateProject(id, field, value) {
+            const p = data.projects.find(x => x.id === id);
+            if (p) p[field] = value;
+        }
 
-            filteredData.allocations = rawData.allocations.filter(a => {
-                if (!resourceIds.includes(a.ResourceID)) return false;
-                if (!projectIds.includes(a.ProjectID)) return false;
-                if (periodFilter && a.Month !== periodFilter) return false;
-                return true;
+        function deleteProject(id) {
+            if (confirm('Delete this project?')) {
+                data.projects = data.projects.filter(x => x.id !== id);
+                data.allocations = data.allocations.filter(x => x.projectId !== id);
+                renderProjects();
+                showToast('Project deleted');
+            }
+        }
+
+        // ========== ALLOCATIONS ==========
+        function populateAllocationFilters() {
+            const resourceFilter = document.getElementById('allocFilterResource');
+            const projectFilter = document.getElementById('allocFilterProject');
+            const monthFilter = document.getElementById('allocFilterMonth');
+
+            resourceFilter.innerHTML = '<option value="">All Resources</option>' +
+                data.resources.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+
+            projectFilter.innerHTML = '<option value="">All Projects</option>' +
+                data.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+
+            const months = [...new Set(data.allocations.map(a => a.month))];
+            monthFilter.innerHTML = '<option value="">All Months</option>' +
+                sortMonths(months).map(m => `<option value="${m}">${m}</option>`).join('');
+        }
+
+        function renderAllocations() {
+            const grid = document.getElementById('allocationsGrid');
+            const resourceFilter = document.getElementById('allocFilterResource').value;
+            const projectFilter = document.getElementById('allocFilterProject').value;
+            const monthFilter = document.getElementById('allocFilterMonth').value;
+
+            let filtered = data.allocations;
+            if (resourceFilter) filtered = filtered.filter(a => a.resourceId === resourceFilter);
+            if (projectFilter) filtered = filtered.filter(a => a.projectId === projectFilter);
+            if (monthFilter) filtered = filtered.filter(a => a.month === monthFilter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="empty-state">
+                    <div class="empty-state-icon">📅</div>
+                    <h3>No allocations</h3>
+                    <p>Start mapping resources to projects</p>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(a => {
+                const resource = data.resources.find(r => r.id === a.resourceId);
+                const project = data.projects.find(p => p.id === a.projectId);
+                return `
+                <div class="allocation-row" data-id="${a.id}">
+                    <select onchange="updateAllocation('${a.id}', 'resourceId', this.value)">
+                        ${data.resources.map(r => `<option value="${r.id}" ${r.id === a.resourceId ? 'selected' : ''}>${r.name}</option>`).join('')}
+                    </select>
+                    <select onchange="updateAllocation('${a.id}', 'projectId', this.value)">
+                        ${data.projects.map(p => `<option value="${p.id}" ${p.id === a.projectId ? 'selected' : ''}>${p.name}</option>`).join('')}
+                    </select>
+                    <select onchange="updateAllocation('${a.id}', 'month', this.value)">
+                        ${getMonthOptions(a.month)}
+                    </select>
+                    <input type="number" value="${a.percent}" min="0" max="100" placeholder="%"
+                           onchange="updateAllocation('${a.id}', 'percent', +this.value)">
+                    <input type="text" value="${a.role || ''}" placeholder="Role"
+                           onchange="updateAllocation('${a.id}', 'role', this.value)">
+                    <button class="btn btn-danger btn-sm" onclick="deleteAllocation('${a.id}')">×</button>
+                </div>`;
+            }).join('');
+        }
+
+        function getMonthOptions(selected) {
+            const months = [];
+            const start = new Date();
+            start.setDate(1);
+            for (let i = -2; i < 12; i++) {
+                const d = new Date(start);
+                d.setMonth(d.getMonth() + i);
+                const label = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-');
+                months.push(label);
+            }
+            return months.map(m => `<option value="${m}" ${m === selected ? 'selected' : ''}>${m}</option>`).join('');
+        }
+
+        function addAllocation() {
+            if (data.resources.length === 0 || data.projects.length === 0) {
+                showToast('Add resources and projects first');
+                return;
+            }
+            const today = new Date();
+            const month = today.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-');
+
+            data.allocations.push({
+                id: genId('A'),
+                resourceId: data.resources[0].id,
+                projectId: data.projects[0].id,
+                month: month,
+                percent: 50,
+                role: ''
             });
+            renderAllocations();
+            showToast('Allocation added');
+        }
 
+        function updateAllocation(id, field, value) {
+            const a = data.allocations.find(x => x.id === id);
+            if (a) a[field] = value;
+        }
+
+        function deleteAllocation(id) {
+            data.allocations = data.allocations.filter(x => x.id !== id);
+            renderAllocations();
+            showToast('Allocation deleted');
+        }
+
+        // ========== DASHBOARD ==========
+        function populateDashFilters() {
+            const skillFilter = document.getElementById('dashFilterSkill');
+            const skills = [...new Set(data.resources.map(r => r.primarySkill))];
+            skillFilter.innerHTML = '<option value="">All Skills</option>' +
+                skills.map(s => `<option value="${s}">${s}</option>`).join('');
+        }
+
+        function resetDashFilters() {
+            document.getElementById('dashFilterSkill').value = '';
+            document.getElementById('dashFilterType').value = '';
             renderDashboard();
         }
 
-        function resetFilters() {
-            document.getElementById('filterResource').value = '';
-            document.getElementById('filterProject').value = '';
-            document.getElementById('filterSkill').value = '';
-            document.getElementById('filterType').value = '';
-            document.getElementById('filterPeriod').value = '';
-            filteredData = JSON.parse(JSON.stringify(rawData));
-            renderDashboard();
-        }
+        function getFilteredData() {
+            const skillFilter = document.getElementById('dashFilterSkill')?.value || '';
+            const typeFilter = document.getElementById('dashFilterType')?.value || '';
 
-        // Helper function to sort months chronologically (e.g., "Jan-2025", "Feb-2025")
-        function sortMonthsChronologically(months) {
-            const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            return months.sort((a, b) => {
-                const [monthA, yearA] = a.split('-');
-                const [monthB, yearB] = b.split('-');
-                if (yearA !== yearB) return parseInt(yearA) - parseInt(yearB);
-                return monthOrder.indexOf(monthA) - monthOrder.indexOf(monthB);
-            });
+            let resources = data.resources;
+            let projects = data.projects;
+
+            if (skillFilter) resources = resources.filter(r => r.primarySkill === skillFilter);
+            if (typeFilter) projects = projects.filter(p => p.type === typeFilter);
+
+            const resourceIds = resources.map(r => r.id);
+            const projectIds = projects.map(p => p.id);
+
+            const allocations = data.allocations.filter(a =>
+                resourceIds.includes(a.resourceId) && projectIds.includes(a.projectId)
+            );
+
+            return { resources, projects, allocations };
         }
 
         function renderDashboard() {
-            updateMetrics();
-            renderPipelineChart();
-            renderAggregateUtilChart();
-            renderProjectedRevenueChart();
-            renderSupplyDemandChart();
-            renderUtilizationHeatmap();
-            renderAvailableResourcesTable();
-            renderProjectNeedsTable();
-            renderGanttChart();
+            const fd = getFilteredData();
+            updateMetrics(fd);
+            renderPipelineChart(fd);
+            renderUtilizationChart(fd);
+            renderRevenueChart(fd);
+            renderSupplyDemandChart(fd);
+            renderHeatmap(fd);
         }
 
-        function getResourceUtilization() {
-            const utilization = {};
-            const months = [...new Set(rawData.allocations.map(a => a.Month))];
+        function updateMetrics(fd) {
+            const active = fd.projects.filter(p => p.type === 'Active');
+            const planned = fd.projects.filter(p => p.type === 'Planned');
 
-            filteredData.resources.forEach(r => {
-                utilization[r.ResourceID] = { months: {}, avg: 0 };
-                months.forEach(m => { utilization[r.ResourceID].months[m] = 0; });
-            });
+            document.getElementById('metricActiveProjects').textContent = active.length;
+            document.getElementById('metricPlannedProjects').textContent = planned.length;
 
-            filteredData.allocations.forEach(a => {
-                if (utilization[a.ResourceID]) {
-                    utilization[a.ResourceID].months[a.Month] =
-                        (utilization[a.ResourceID].months[a.Month] || 0) + a.AllocationPercent;
+            const weightedFTE = planned.reduce((sum, p) => sum + (p.requiredFTE * p.probability / 100), 0);
+            document.getElementById('metricWeightedFTE').textContent = weightedFTE.toFixed(1) + ' weighted FTE';
+
+            document.getElementById('metricResources').textContent = fd.resources.length;
+
+            // Calculate utilization
+            const utilByResource = {};
+            fd.resources.forEach(r => utilByResource[r.id] = []);
+            fd.allocations.forEach(a => {
+                if (utilByResource[a.resourceId]) {
+                    utilByResource[a.resourceId].push(a.percent);
                 }
             });
 
-            Object.keys(utilization).forEach(rid => {
-                const vals = Object.values(utilization[rid].months).filter(v => v > 0);
-                utilization[rid].avg = vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+            let totalUtil = 0, countUtil = 0;
+            let available = 0, overloaded = 0;
+
+            Object.entries(utilByResource).forEach(([rid, percents]) => {
+                if (percents.length > 0) {
+                    const avg = percents.reduce((a, b) => a + b, 0) / percents.length;
+                    totalUtil += avg;
+                    countUtil++;
+                    if (avg < 50) available++;
+                    if (percents.some(p => p > 100)) overloaded++;
+                } else {
+                    available++;
+                }
             });
 
-            return utilization;
+            const avgUtil = countUtil > 0 ? Math.round(totalUtil / countUtil) : 0;
+            document.getElementById('metricAvgUtil').textContent = avgUtil + '% avg util';
+            document.getElementById('metricAvailable').textContent = available;
+            document.getElementById('metricOverloaded').textContent = overloaded;
         }
 
-        function updateMetrics() {
-            const activeProjects = filteredData.projects.filter(p => p.ProjectType === 'Active').length;
-            const plannedProjects = filteredData.projects.filter(p => p.ProjectType === 'Planned');
-
-            document.getElementById('metricActiveProjects').textContent = activeProjects;
-            document.getElementById('metricPlannedProjects').textContent = plannedProjects.length;
-
-            const weightedFTE = plannedProjects.reduce((sum, p) => sum + (p.RequiredFTE * (p.Probability / 100)), 0);
-            document.getElementById('metricWeightedFTE').textContent = weightedFTE.toFixed(1) + ' weighted FTE';
-
-            document.getElementById('metricResources').textContent = filteredData.resources.length;
-
-            const utilization = getResourceUtilization();
-            const avgUtil = Object.values(utilization).reduce((sum, u) => sum + u.avg, 0) / Math.max(Object.keys(utilization).length, 1);
-            document.getElementById('metricAvgUtil').textContent = Math.round(avgUtil) + '% avg utilization';
-
-            const availableCount = Object.values(utilization).filter(u => u.avg < 50).length;
-            document.getElementById('metricAvailable').textContent = availableCount;
-
-            const overloadCount = Object.values(utilization).filter(u =>
-                Object.values(u.months).some(m => m > 100)
-            ).length;
-            document.getElementById('metricOverloaded').textContent = overloadCount;
-        }
-
-        function renderPipelineChart() {
+        function renderPipelineChart(fd) {
             const ctx = document.getElementById('pipelineChart').getContext('2d');
             if (charts.pipeline) charts.pipeline.destroy();
 
-            const activeProjects = filteredData.projects.filter(p => p.ProjectType === 'Active');
-            const plannedProjects = filteredData.projects.filter(p => p.ProjectType === 'Planned')
-                .sort((a, b) => b.Probability - a.Probability);
-
-            const allProjects = [...activeProjects, ...plannedProjects];
-            const labels = allProjects.map(p => p.ProjectName.substring(0, 20));
-            const data = allProjects.map(p => p.RequiredFTE);
-            const colors = allProjects.map(p => p.ProjectType === 'Active' ? '#059669' : '#0ea5e9');
-            const borderColors = allProjects.map(p => p.ProjectType === 'Active' ? '#047857' : '#0284c7');
+            const sorted = [...fd.projects].sort((a, b) => {
+                if (a.type !== b.type) return a.type === 'Active' ? -1 : 1;
+                return b.probability - a.probability;
+            });
 
             charts.pipeline = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: sorted.map(p => p.name.substring(0, 18)),
                     datasets: [{
                         label: 'Required FTE',
-                        data: data,
-                        backgroundColor: colors,
-                        borderColor: borderColors,
-                        borderWidth: 1,
+                        data: sorted.map(p => p.requiredFTE),
+                        backgroundColor: sorted.map(p => p.type === 'Active' ? '#059669' : '#0ea5e9'),
                         borderRadius: 4
                     }]
                 },
@@ -1195,79 +1264,53 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                afterLabel: function(context) {
-                                    const project = allProjects[context.dataIndex];
-                                    return `Type: ${project.ProjectType}\nProbability: ${project.Probability}%`;
-                                }
-                            }
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        x: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Required FTE', color: '#64748b' },
-                            grid: { color: '#e2e8f0' },
-                            ticks: { color: '#64748b' }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: { color: '#475569', font: { size: 11 } }
-                        }
+                        x: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { color: '#64748b' } },
+                        y: { grid: { display: false }, ticks: { color: '#475569', font: { size: 10 } } }
                     }
                 }
             });
         }
 
-        function renderAggregateUtilChart() {
-            const ctx = document.getElementById('aggregateUtilChart').getContext('2d');
-            if (charts.aggregateUtil) charts.aggregateUtil.destroy();
+        function renderUtilizationChart(fd) {
+            const ctx = document.getElementById('utilizationChart').getContext('2d');
+            if (charts.utilization) charts.utilization.destroy();
 
-            const months = sortMonthsChronologically([...new Set(rawData.allocations.map(a => a.Month))]);
-            const totalCapacity = filteredData.resources.length * 100; // 100% per resource
+            const months = sortMonths([...new Set(fd.allocations.map(a => a.month))]);
+            const totalCapacity = fd.resources.length * 100;
 
-            const demandByMonth = {};
-            months.forEach(m => { demandByMonth[m] = 0; });
+            const utilByMonth = {};
+            months.forEach(m => utilByMonth[m] = 0);
 
-            filteredData.allocations.forEach(a => {
-                const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
-                const prob = project ? project.Probability / 100 : 1;
-                demandByMonth[a.Month] = (demandByMonth[a.Month] || 0) + (a.AllocationPercent * prob);
+            fd.allocations.forEach(a => {
+                const project = data.projects.find(p => p.id === a.projectId);
+                const prob = project ? project.probability / 100 : 1;
+                utilByMonth[a.month] = (utilByMonth[a.month] || 0) + (a.percent * prob);
             });
 
-            // Calculate utilization as % of total capacity
-            const utilizationData = months.map(m => {
-                const util = (demandByMonth[m] / totalCapacity) * 100;
-                return Math.round(util * 10) / 10; // Round to 1 decimal
-            });
-            const targetLine = months.map(() => 100); // 100% target line
+            const utilData = months.map(m => totalCapacity > 0 ? Math.round((utilByMonth[m] / totalCapacity) * 100) : 0);
 
-            charts.aggregateUtil = new Chart(ctx, {
+            charts.utilization = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: months,
                     datasets: [
                         {
-                            label: 'Target (100%)',
-                            data: targetLine,
+                            label: 'Target',
+                            data: months.map(() => 100),
                             borderColor: '#94a3b8',
-                            backgroundColor: 'transparent',
                             borderDash: [5, 5],
-                            tension: 0,
                             pointRadius: 0,
                             borderWidth: 2
                         },
                         {
-                            label: 'Team Utilization %',
-                            data: utilizationData,
+                            label: 'Utilization %',
+                            data: utilData,
                             borderColor: '#4f46e5',
                             backgroundColor: 'rgba(79, 70, 229, 0.1)',
                             fill: true,
                             tension: 0.3,
-                            pointBackgroundColor: '#4f46e5',
                             pointRadius: 4
                         }
                     ]
@@ -1275,132 +1318,80 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#475569', usePointStyle: true }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y + '%';
-                                }
-                            }
-                        }
-                    },
+                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 10 } } } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 120,
-                            title: { display: true, text: 'Utilization %', color: '#64748b' },
-                            grid: { color: '#e2e8f0' },
-                            ticks: {
-                                color: '#64748b',
-                                callback: function(value) { return value + '%'; }
-                            }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#64748b' }
-                        }
+                        y: { beginAtZero: true, max: 120, grid: { color: '#e2e8f0' }, ticks: { color: '#64748b', callback: v => v + '%' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } }
                     }
                 }
             });
         }
 
-        function renderProjectedRevenueChart() {
-            const ctx = document.getElementById('projectedRevenueChart').getContext('2d');
-            if (charts.projectedRevenue) charts.projectedRevenue.destroy();
+        function renderRevenueChart(fd) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            if (charts.revenue) charts.revenue.destroy();
 
-            const months = sortMonthsChronologically([...new Set(rawData.allocations.map(a => a.Month))]);
+            const months = sortMonths([...new Set(fd.allocations.map(a => a.month))]);
             const revenueByMonth = {};
-            months.forEach(m => { revenueByMonth[m] = 0; });
+            months.forEach(m => revenueByMonth[m] = 0);
 
-            // Calculate revenue: CostRate × AllocationPercent × HoursPerWeek × 4.33 weeks/month
-            filteredData.allocations.forEach(a => {
-                const resource = rawData.resources.find(r => r.ResourceID === a.ResourceID);
-                const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
+            fd.allocations.forEach(a => {
+                const resource = data.resources.find(r => r.id === a.resourceId);
+                const project = data.projects.find(p => p.id === a.projectId);
                 if (resource && project) {
-                    const prob = project.Probability / 100;
-                    const weeksPerMonth = 4.33;
-                    // Revenue = CostRate × (AllocationPercent/100) × HoursPerWeek × weeksPerMonth × probability
-                    const monthlyRevenue = resource.CostRate * (a.AllocationPercent / 100) * resource.HoursPerWeek * weeksPerMonth * prob;
-                    revenueByMonth[a.Month] = (revenueByMonth[a.Month] || 0) + monthlyRevenue;
+                    const prob = project.probability / 100;
+                    const monthlyRevenue = resource.costRate * (a.percent / 100) * resource.hoursPerWeek * 4.33 * prob;
+                    revenueByMonth[a.month] = (revenueByMonth[a.month] || 0) + monthlyRevenue;
                 }
             });
 
-            const revenueData = months.map(m => Math.round(revenueByMonth[m] / 1000)); // In thousands
-
-            charts.projectedRevenue = new Chart(ctx, {
+            charts.revenue = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: months,
                     datasets: [{
                         label: 'Revenue ($K)',
-                        data: revenueData,
+                        data: months.map(m => Math.round(revenueByMonth[m] / 1000)),
                         backgroundColor: '#10b981',
-                        borderColor: '#059669',
-                        borderWidth: 1,
                         borderRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return '$' + context.parsed.y.toLocaleString() + 'K';
-                                }
-                            }
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Revenue ($K)', color: '#64748b' },
-                            grid: { color: '#e2e8f0' },
-                            ticks: {
-                                color: '#64748b',
-                                callback: function(value) { return '$' + value + 'K'; }
-                            }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#64748b' }
-                        }
+                        y: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { color: '#64748b', callback: v => '$' + v + 'K' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } }
                     }
                 }
             });
         }
 
-        function renderSupplyDemandChart() {
+        function renderSupplyDemandChart(fd) {
             const ctx = document.getElementById('supplyDemandChart').getContext('2d');
             if (charts.supplyDemand) charts.supplyDemand.destroy();
 
             const supplyBySkill = {};
             const demandBySkill = {};
 
-            filteredData.resources.forEach(r => {
-                supplyBySkill[r.PrimarySkill] = (supplyBySkill[r.PrimarySkill] || 0) + 1;
+            fd.resources.forEach(r => {
+                supplyBySkill[r.primarySkill] = (supplyBySkill[r.primarySkill] || 0) + 1;
             });
 
-            filteredData.allocations.forEach(a => {
-                const resource = rawData.resources.find(r => r.ResourceID === a.ResourceID);
-                const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
+            const months = [...new Set(fd.allocations.map(a => a.month))].length || 1;
+
+            fd.allocations.forEach(a => {
+                const resource = data.resources.find(r => r.id === a.resourceId);
+                const project = data.projects.find(p => p.id === a.projectId);
                 if (resource && project) {
-                    const skill = resource.PrimarySkill;
-                    const prob = project.Probability / 100;
-                    demandBySkill[skill] = (demandBySkill[skill] || 0) + (a.AllocationPercent / 100 * prob);
+                    const skill = resource.primarySkill;
+                    const prob = project.probability / 100;
+                    demandBySkill[skill] = (demandBySkill[skill] || 0) + (a.percent / 100 * prob);
                 }
             });
 
-            const months = [...new Set(filteredData.allocations.map(a => a.Month))].length || 1;
-            Object.keys(demandBySkill).forEach(skill => {
-                demandBySkill[skill] = demandBySkill[skill] / months;
-            });
+            Object.keys(demandBySkill).forEach(s => demandBySkill[s] /= months);
 
             const skills = [...new Set([...Object.keys(supplyBySkill), ...Object.keys(demandBySkill)])];
 
@@ -1409,119 +1400,59 @@
                 data: {
                     labels: skills,
                     datasets: [
-                        {
-                            label: 'Supply (FTE)',
-                            data: skills.map(s => supplyBySkill[s] || 0),
-                            backgroundColor: '#10b981',
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Demand (FTE)',
-                            data: skills.map(s => (demandBySkill[s] || 0).toFixed(1)),
-                            backgroundColor: '#6366f1',
-                            borderRadius: 4
-                        }
+                        { label: 'Supply', data: skills.map(s => supplyBySkill[s] || 0), backgroundColor: '#10b981', borderRadius: 4 },
+                        { label: 'Demand', data: skills.map(s => (demandBySkill[s] || 0).toFixed(1)), backgroundColor: '#6366f1', borderRadius: 4 }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#475569', usePointStyle: true }
-                        }
-                    },
+                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 10 } } } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'FTE', color: '#64748b' },
-                            grid: { color: '#e2e8f0' },
-                            ticks: { color: '#64748b' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#64748b', maxRotation: 45 }
-                        }
+                        y: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } }
                     }
                 }
             });
         }
 
-        function renderUtilizationHeatmap() {
-            const table = document.getElementById('utilizationHeatmap');
-            const thead = table.querySelector('thead');
-            const tbody = table.querySelector('tbody');
+        function renderHeatmap(fd) {
+            const table = document.getElementById('heatmapTable');
+            const months = sortMonths([...new Set(data.allocations.map(a => a.month))]);
 
-            const months = sortMonthsChronologically([...new Set(rawData.allocations.map(a => a.Month))]);
+            if (months.length === 0 || fd.resources.length === 0) {
+                table.innerHTML = '<tr><td class="empty-state">No allocation data to display</td></tr>';
+                return;
+            }
 
-            thead.innerHTML = `<tr><th>Resource</th><th>Skill</th>${months.map(m => `<th>${m}</th>`).join('')}<th>Avg</th></tr>`;
-
-            // Track both utilization and projects per resource per month
             const utilization = {};
-            const projectsByResourceMonth = {};
-
-            filteredData.resources.forEach(r => {
-                utilization[r.ResourceID] = {};
-                projectsByResourceMonth[r.ResourceID] = {};
-                months.forEach(m => {
-                    utilization[r.ResourceID][m] = 0;
-                    projectsByResourceMonth[r.ResourceID][m] = [];
-                });
+            fd.resources.forEach(r => {
+                utilization[r.id] = {};
+                months.forEach(m => utilization[r.id][m] = 0);
             });
 
-            filteredData.allocations.forEach(a => {
-                if (utilization[a.ResourceID]) {
-                    utilization[a.ResourceID][a.Month] = (utilization[a.ResourceID][a.Month] || 0) + a.AllocationPercent;
-
-                    // Track projects with their allocation %
-                    const project = rawData.projects.find(p => p.ProjectID === a.ProjectID);
-                    if (project) {
-                        // Create short project code (first 3-4 chars)
-                        const shortName = project.ProjectName.split(' ').map(w => w[0]).join('').substring(0, 3);
-                        projectsByResourceMonth[a.ResourceID][a.Month].push({
-                            code: shortName,
-                            name: project.ProjectName,
-                            percent: a.AllocationPercent,
-                            type: project.ProjectType
-                        });
-                    }
+            fd.allocations.forEach(a => {
+                if (utilization[a.resourceId]) {
+                    utilization[a.resourceId][a.month] = (utilization[a.resourceId][a.month] || 0) + a.percent;
                 }
             });
 
-            tbody.innerHTML = '';
-            filteredData.resources.forEach(r => {
-                const monthValues = months.map(m => utilization[r.ResourceID][m] || 0);
-                const nonZeroValues = monthValues.filter(v => v > 0);
-                const avg = nonZeroValues.length > 0 ? nonZeroValues.reduce((a, b) => a + b, 0) / nonZeroValues.length : 0;
+            table.querySelector('thead').innerHTML = `<tr><th>Resource</th>${months.map(m => `<th>${m}</th>`).join('')}<th>Avg</th></tr>`;
 
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${r.ResourceName}</td>
-                    <td>${r.PrimarySkill}</td>
+            table.querySelector('tbody').innerHTML = fd.resources.map(r => {
+                const vals = months.map(m => utilization[r.id][m] || 0);
+                const nonZero = vals.filter(v => v > 0);
+                const avg = nonZero.length > 0 ? Math.round(nonZero.reduce((a, b) => a + b, 0) / nonZero.length) : 0;
+
+                return `<tr>
+                    <td>${r.name}</td>
                     ${months.map(m => {
-                        const val = utilization[r.ResourceID][m] || 0;
-                        const cls = getHeatmapClass(val);
-                        const projects = projectsByResourceMonth[r.ResourceID][m] || [];
-
-                        // Build project tags
-                        let projectTags = '';
-                        if (projects.length > 0) {
-                            projectTags = projects.map(p => {
-                                const typeClass = p.type === 'Active' ? 'proj-active' : 'proj-planned';
-                                return `<span class="proj-tag ${typeClass}" title="${p.name}: ${p.percent}%">${p.code}</span>`;
-                            }).join('');
-                        }
-
-                        return `<td><div class="heatmap-cell ${cls}">
-                            <div class="heatmap-percent">${val}%</div>
-                            <div class="heatmap-projects">${projectTags}</div>
-                        </div></td>`;
+                        const val = utilization[r.id][m] || 0;
+                        return `<td><div class="heatmap-cell ${getHeatmapClass(val)}">${val}%</div></td>`;
                     }).join('')}
-                    <td><div class="heatmap-cell ${getHeatmapClass(avg)}">${Math.round(avg)}%</div></td>
-                `;
-                tbody.appendChild(row);
-            });
+                    <td><div class="heatmap-cell ${getHeatmapClass(avg)}">${avg}%</div></td>
+                </tr>`;
+            }).join('');
         }
 
         function getHeatmapClass(value) {
@@ -1533,146 +1464,69 @@
             return 'heatmap-low';
         }
 
-        function renderAvailableResourcesTable() {
-            const tbody = document.getElementById('availableResourcesTable').querySelector('tbody');
-            const utilization = getResourceUtilization();
+        // ========== UTILITIES ==========
+        function sortMonths(months) {
+            const order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return months.sort((a, b) => {
+                const [mA, yA] = a.split('-');
+                const [mB, yB] = b.split('-');
+                if (yA !== yB) return parseInt(yA) - parseInt(yB);
+                return order.indexOf(mA) - order.indexOf(mB);
+            });
+        }
 
-            const availableResources = [];
-            filteredData.resources.forEach(r => {
-                const util = utilization[r.ResourceID];
-                if (util && util.avg < 80) {
-                    availableResources.push({
-                        ...r,
-                        avgUtil: util.avg,
-                        available: 100 - util.avg
-                    });
+        function renderAll() {
+            renderResources();
+            renderProjects();
+        }
+
+        // ========== SAVE & IMPORT ==========
+        function saveFile() {
+            // Get current HTML
+            let html = document.documentElement.outerHTML;
+
+            // Update the embedded data
+            const newData = JSON.stringify(data, null, 4);
+            html = html.replace(
+                /<script type="application\/json" id="appData">[\s\S]*?<\/script>/,
+                `<script type="application/json" id="appData">\n${newData}\n    </script>`
+            );
+
+            // Create download
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ERP_Resource_Planning.html';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast('File saved! Replace your old file with this one.');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const text = await file.text();
+                        const imported = JSON.parse(text);
+                        if (imported.resources && imported.projects && imported.allocations) {
+                            data = imported;
+                            renderAll();
+                            showToast('Data imported successfully');
+                        } else {
+                            showToast('Invalid data format');
+                        }
+                    } catch (err) {
+                        showToast('Error reading file');
+                    }
                 }
-            });
-
-            availableResources.sort((a, b) => a.avgUtil - b.avgUtil);
-
-            tbody.innerHTML = '';
-            availableResources.slice(0, 10).forEach(r => {
-                const recommendation = r.avgUtil < 30 ? 'Ready for new project' :
-                                      r.avgUtil < 50 ? 'Can take partial allocation' :
-                                      'Limited availability';
-                const statusClass = r.avgUtil < 30 ? 'status-available' :
-                                   r.avgUtil < 50 ? 'status-low' : 'status-planned';
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${r.ResourceName}</td>
-                    <td>${r.PrimarySkill}</td>
-                    <td>${Math.round(r.avgUtil)}%</td>
-                    <td><strong>${Math.round(r.available)}%</strong></td>
-                    <td><span class="status-badge ${statusClass}">${recommendation}</span></td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            if (availableResources.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">All resources fully allocated</td></tr>';
-            }
-        }
-
-        function renderProjectNeedsTable() {
-            const tbody = document.getElementById('projectNeedsTable').querySelector('tbody');
-
-            const assignedFTE = {};
-            const months = [...new Set(filteredData.allocations.map(a => a.Month))].length || 1;
-
-            filteredData.allocations.forEach(a => {
-                assignedFTE[a.ProjectID] = (assignedFTE[a.ProjectID] || 0) + (a.AllocationPercent / 100);
-            });
-
-            Object.keys(assignedFTE).forEach(pid => {
-                assignedFTE[pid] = assignedFTE[pid] / months;
-            });
-
-            tbody.innerHTML = '';
-            filteredData.projects.forEach(p => {
-                const assigned = assignedFTE[p.ProjectID] || 0;
-                const gap = p.RequiredFTE - assigned;
-                const gapClass = gap > 1 ? 'status-overload' : gap > 0 ? 'status-low' : 'status-available';
-                const typeClass = p.ProjectType === 'Active' ? 'status-active' : 'status-planned';
-                const probClass = p.Probability >= 80 ? 'prob-high' : p.Probability >= 50 ? 'prob-medium' : 'prob-low';
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${p.ProjectName}</td>
-                    <td><span class="status-badge ${typeClass}">${p.ProjectType}</span></td>
-                    <td><span class="prob-badge ${probClass}">${p.Probability}%</span></td>
-                    <td>${p.RequiredFTE}</td>
-                    <td>${assigned.toFixed(1)}</td>
-                    <td><span class="status-badge ${gapClass}">${gap > 0 ? '+' : ''}${gap.toFixed(1)}</span></td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function renderGanttChart() {
-            const container = document.getElementById('ganttContainer');
-
-            let minDate = new Date('2026-12-31');
-            let maxDate = new Date('2024-01-01');
-
-            filteredData.projects.forEach(p => {
-                const start = new Date(p.StartDate);
-                const end = new Date(p.EndDate);
-                if (start < minDate) minDate = start;
-                if (end > maxDate) maxDate = end;
-            });
-
-            const months = [];
-            const current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
-            while (current <= maxDate) {
-                months.push(new Date(current));
-                current.setMonth(current.getMonth() + 1);
-            }
-
-            const totalDays = (maxDate - minDate) / (1000 * 60 * 60 * 24);
-
-            let html = '<div class="gantt-chart">';
-            html += '<div class="gantt-header">';
-            months.forEach(m => {
-                html += `<div class="gantt-month">${m.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}</div>`;
-            });
-            html += '</div>';
-
-            const sortedProjects = [...filteredData.projects].sort((a, b) => {
-                if (a.ProjectType !== b.ProjectType) return a.ProjectType === 'Active' ? -1 : 1;
-                return new Date(a.StartDate) - new Date(b.StartDate);
-            });
-
-            sortedProjects.forEach(p => {
-                const start = new Date(p.StartDate);
-                const end = new Date(p.EndDate);
-                const startOffset = Math.max(0, (start - minDate) / (1000 * 60 * 60 * 24));
-                const duration = (end - start) / (1000 * 60 * 60 * 24);
-
-                const leftPercent = (startOffset / totalDays) * 100;
-                const widthPercent = (duration / totalDays) * 100;
-
-                const barClass = p.ProjectType === 'Active' ? 'active' : 'planned';
-                const probLabel = p.ProjectType === 'Planned' ? ` (${p.Probability}%)` : '';
-
-                html += `
-                    <div class="gantt-row">
-                        <div class="gantt-label">
-                            <span class="status-badge ${p.ProjectType === 'Active' ? 'status-active' : 'status-planned'}" style="font-size:0.65rem;padding:0.125rem 0.375rem;">${p.ProjectType}</span>
-                            ${p.ProjectName.substring(0, 18)}
-                        </div>
-                        <div class="gantt-bars">
-                            <div class="gantt-bar ${barClass}" style="left: ${leftPercent}%; width: ${widthPercent}%;">
-                                ${p.RequiredFTE} FTE${probLabel}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            html += '</div>';
-            container.innerHTML = html;
+            };
+            input.click();
         }
     </script>
 </body>
