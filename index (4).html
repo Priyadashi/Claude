@@ -6,6 +6,8 @@
     <title>ERP Hub Resource Planning Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -715,6 +717,9 @@
                     </button>
                 </div>
                 <span class="file-name" id="fileName">No file loaded</span>
+                <button class="file-btn" id="pdfBtn" style="background: #0284c7; display: none;" onclick="exportPDF()">
+                    📄 Export PDF
+                </button>
             </div>
         </div>
     </header>
@@ -1014,6 +1019,7 @@
 
                 document.getElementById('uploadPrompt').style.display = 'none';
                 document.getElementById('dashboardContent').style.display = 'block';
+                document.getElementById('pdfBtn').style.display = 'flex';
 
                 renderDashboard();
             } catch (error) {
@@ -1673,6 +1679,65 @@
 
             html += '</div>';
             container.innerHTML = html;
+        }
+
+        // PDF Export Function
+        async function exportPDF() {
+            const btn = document.getElementById('pdfBtn');
+            btn.textContent = '⏳ Generating...';
+            btn.disabled = true;
+
+            try {
+                const content = document.getElementById('dashboardContent');
+                const { jsPDF } = window.jspdf;
+
+                const canvas = await html2canvas(content, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#f8fafc',
+                    windowWidth: content.scrollWidth,
+                    windowHeight: content.scrollHeight
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('l', 'mm', 'a4');
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+
+                // Calculate scaling to fit width
+                const ratio = pdfWidth / imgWidth;
+                const scaledHeight = imgHeight * ratio;
+
+                // Handle multi-page if content is tall
+                let heightLeft = scaledHeight;
+                let position = 0;
+                let page = 0;
+
+                while (heightLeft > 0) {
+                    if (page > 0) {
+                        pdf.addPage();
+                    }
+
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
+                    heightLeft -= pdfHeight;
+                    position -= pdfHeight;
+                    page++;
+                }
+
+                pdf.save('ERP_Resource_Planning_Dashboard.pdf');
+
+                btn.innerHTML = '📄 Export PDF';
+                btn.disabled = false;
+            } catch (err) {
+                console.error('PDF export error:', err);
+                alert('Error generating PDF. Please try again.');
+                btn.innerHTML = '📄 Export PDF';
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
