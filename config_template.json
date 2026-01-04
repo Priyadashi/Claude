@@ -1,0 +1,32 @@
+{
+  "products": [
+    {
+      "id": "P001",
+      "name": "Product Name",
+      "selling_price": 150.0,
+      "production_cost": 80.0,
+      "production_time_hrs": 0.5,
+      "initial_inventory": 50,
+      "min_inventory": 10,
+      "max_inventory": 500,
+      "compatible_machines": ["M001", "M002"]
+    }
+  ],
+  "machines": [
+    {
+      "id": "M001",
+      "name": "Machine Name",
+      "availability": 1.0
+    }
+  ],
+  "demands": [
+    {
+      "product_id": "P001",
+      "quantity": 100,
+      "day": 5
+    }
+  ],
+  "planning_horizon": 14,
+  "shifts_per_day": 2,
+  "hours_per_shift": 8
+}
