@@ -1,0 +1,438 @@
+{
+  "name": "SAP to Production Optimizer",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://your-sap-system.com/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/MaterialStock",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "$filter",
+              "value": "Plant eq '1000'"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get SAP Material Stock (MM)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 200],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "1",
+          "name": "SAP S/4HANA OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://your-sap-system.com/sap/opu/odata/sap/API_MATERIAL_SRV/A_Product",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "$filter",
+              "value": "Plant eq '1000'"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get SAP Materials (MM)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 400],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "1",
+          "name": "SAP S/4HANA OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://your-sap-system.com/sap/opu/odata/sap/API_WORKCENTER_SRV/WorkCenter",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "$filter",
+              "value": "Plant eq '1000'"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get Work Centers (PP)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 600],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "1",
+          "name": "SAP S/4HANA OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://your-sap-system.com/sap/opu/odata/sap/API_BOM_SRV/BillOfMaterial",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "$expand",
+              "value": "to_BillOfMaterialItem"
+            },
+            {
+              "name": "$filter",
+              "value": "Plant eq '1000'"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get BOM Data (PP)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 800],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "1",
+          "name": "SAP S/4HANA OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://your-sap-system.com/sap/opu/odata/sap/API_ROUTING_SRV/Routing",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "$expand",
+              "value": "to_RoutingOperation"
+            },
+            {
+              "name": "$filter",
+              "value": "Plant eq '1000'"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get Routing Data (PP)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 1000],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "1",
+          "name": "SAP S/4HANA OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Transform SAP data to Optimizer format\nconst materials = $node['Get SAP Materials (MM)'].json.d.results;\nconst stock = $node['Get SAP Material Stock (MM)'].json.d.results;\nconst workCenters = $node['Get Work Centers (PP)'].json.d.results;\nconst bom = $node['Get BOM Data (PP)'].json.d.results;\nconst routing = $node['Get Routing Data (PP)'].json.d.results;\n\n// Transform to optimizer format\nconst transformedData = {\n  materials: materials.map(m => ({\n    MATNR: m.Product,\n    MAKTX: m.ProductDescription,\n    MEINS: m.BaseUnit,\n    WERKS: m.Plant,\n    MTART: m.ProductType,\n    STPRS: parseFloat(m.StandardPrice) || 0,\n    VK_PRICE: parseFloat(m.SalesPrice) || 0\n  })),\n  \n  stock_data: stock.map(s => ({\n    MATNR: s.Material,\n    WERKS: s.Plant,\n    LGORT: s.StorageLocation,\n    LABST: parseFloat(s.MatlWrhsStkQtyInMatlBaseUnit) || 0,\n    EINME: s.MaterialBaseUnit\n  })),\n  \n  work_centers: workCenters.map(w => ({\n    ARBPL: w.WorkCenter,\n    WERKS: w.Plant,\n    KTEXT: w.WorkCenterDescription,\n    SHIFT_HOURS: 8.0,\n    SHIFTS_PER_DAY: 2,\n    AVAILABLE_CAPACITY_PERCENT: parseFloat(w.WorkCenterAvailability) || 100.0\n  })),\n  \n  routing_headers: routing.map(r => ({\n    PLNNR: r.TaskListGroup,\n    PLNAL: r.GroupCounter,\n    MATNR: r.Material,\n    WERKS: r.Plant,\n    BMSCH: parseFloat(r.TaskListBaseLotSizeQuantity) || 1.0\n  })),\n  \n  routing_operations: routing.flatMap(r => \n    (r.to_RoutingOperation?.results || []).map(op => ({\n      PLNNR: r.TaskListGroup,\n      PLNAL: r.GroupCounter,\n      PLNFL: op.TaskListSequence,\n      VORNR: op.Operation,\n      ARBPL: op.WorkCenter,\n      WERKS: op.Plant,\n      VGW01: parseFloat(op.OperationSetupTime) || 0,\n      VGW02: parseFloat(op.OperationMachineTime) || 0,\n      VGW03: parseFloat(op.OperationLaborTime) || 0,\n      LTXA1: op.OperationText\n    }))\n  ),\n  \n  demands: [\n    // These would come from sales orders in SAP\n    // For now using static demands\n    { product_id: 'FG001', quantity: 100, day: 5 },\n    { product_id: 'FG002', quantity: 150, day: 7 }\n  ],\n  \n  planning_horizon: 14,\n  shifts_per_day: 2,\n  hours_per_shift: 8.0\n};\n\nreturn { json: transformedData };"
+      },
+      "name": "Transform SAP Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [700, 500]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/webhook/optimize",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "sap_data",
+              "value": "={{$json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Call Optimizer API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [900, 500]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1100, 500]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/jobs/{{$json.job_id}}",
+        "options": {}
+      },
+      "name": "Check Job Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1300, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equals",
+              "value2": "completed"
+            }
+          ]
+        }
+      },
+      "name": "Is Completed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1500, 500]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/results/{{$json.job_id}}/json",
+        "options": {}
+      },
+      "name": "Get Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1700, 400]
+    },
+    {
+      "parameters": {
+        "operation": "sendEmail",
+        "email": "production-manager@company.com",
+        "subject": "Production Schedule Optimized",
+        "message": "=The production schedule has been optimized.\n\nGross Margin: ${{$json.objective_value}}\nPlanning Horizon: {{$json.summary.planning_horizon}} days\n\nDownload the schedule from the dashboard.",
+        "options": {}
+      },
+      "name": "Send Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1900, 400],
+      "credentials": {
+        "smtp": {
+          "id": "2",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Continue Polling",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1700, 600]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get SAP Material Stock (MM)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get SAP Materials (MM)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Work Centers (PP)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get BOM Data (PP)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Routing Data (PP)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get SAP Material Stock (MM)": {
+      "main": [
+        [
+          {
+            "node": "Transform SAP Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get SAP Materials (MM)": {
+      "main": [
+        [
+          {
+            "node": "Transform SAP Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Work Centers (PP)": {
+      "main": [
+        [
+          {
+            "node": "Transform SAP Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get BOM Data (PP)": {
+      "main": [
+        [
+          {
+            "node": "Transform SAP Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Routing Data (PP)": {
+      "main": [
+        [
+          {
+            "node": "Transform SAP Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform SAP Data": {
+      "main": [
+        [
+          {
+            "node": "Call Optimizer API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Optimizer API": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Check Job Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Job Status": {
+      "main": [
+        [
+          {
+            "node": "Is Completed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Completed?": {
+      "main": [
+        [
+          {
+            "node": "Get Results",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Continue Polling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Results": {
+      "main": [
+        [
+          {
+            "node": "Send Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Polling": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

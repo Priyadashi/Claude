@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Schedule Optimizer - SAP S/4HANA Integration</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    <h1>Factory Schedule Optimizer</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span id="connection-status">Connected</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav class="nav-menu">
+                    <a href="#" class="nav-item active" data-view="optimize">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>Optimize</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="results">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span>Results</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="sap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                            <polyline points="13 2 13 9 20 9"/>
+                        </svg>
+                        <span>SAP Data</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="schedule">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <span>Schedule View</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <div class="integration-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6m0 6v6m6.66-10.66l-4.24 4.24m0 0l-4.24 4.24M23 12h-6m-6 0H1m16.66 5.66l-4.24-4.24m0 0l-4.24-4.24"/>
+                        </svg>
+                        <span>SAP S/4HANA Integrated</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Optimize View -->
+                <div id="optimize-view" class="view active">
+                    <div class="view-header">
+                        <h2>Run Optimization</h2>
+                        <p>Configure and execute production schedule optimization</p>
+                    </div>
+
+                    <div class="card-grid">
+                        <!-- Quick Start Card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Quick Start</h3>
+                                <p>Run with predefined scenarios</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="scenario-buttons">
+                                    <button class="btn btn-scenario" data-scenario="sample">
+                                        <div class="scenario-icon">📊</div>
+                                        <div>
+                                            <strong>Standard</strong>
+                                            <small>4 products, 3 machines</small>
+                                        </div>
+                                    </button>
+                                    <button class="btn btn-scenario" data-scenario="tight">
+                                        <div class="scenario-icon">⚡</div>
+                                        <div>
+                                            <strong>High Demand</strong>
+                                            <small>Tight capacity</small>
+                                        </div>
+                                    </button>
+                                    <button class="btn btn-scenario" data-scenario="multi-shift">
+                                        <div class="scenario-icon">🌙</div>
+                                        <div>
+                                            <strong>24/7 Operation</strong>
+                                            <small>3-shift continuous</small>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SAP Integration Card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>SAP S/4HANA Integration</h3>
+                                <p>Load data from SAP PP & MM modules</p>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-primary btn-full" id="load-sap-data">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Load SAP Sample Data
+                                </button>
+                                <button class="btn btn-secondary btn-full" id="upload-sap-file">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    Upload SAP JSON
+                                </button>
+                                <input type="file" id="sap-file-input" accept=".json" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuration Panel -->
+                    <div class="card" id="config-panel" style="display: none;">
+                        <div class="card-header">
+                            <h3>Configuration</h3>
+                            <button class="btn btn-icon" id="close-config">✕</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="config-summary" id="config-summary"></div>
+
+                            <div class="form-group">
+                                <label>Planning Horizon (days)</label>
+                                <input type="number" id="planning-horizon" value="14" min="1" max="30">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Shifts per Day</label>
+                                    <input type="number" id="shifts-per-day" value="2" min="1" max="3">
+                                </div>
+                                <div class="form-group">
+                                    <label>Hours per Shift</label>
+                                    <input type="number" id="hours-per-shift" value="8" min="1" max="12" step="0.5">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" id="start-date">
+                            </div>
+
+                            <button class="btn btn-primary btn-large btn-full" id="run-optimization">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                Run Optimization
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Progress Card -->
+                    <div class="card" id="progress-card" style="display: none;">
+                        <div class="card-body">
+                            <div class="progress-content">
+                                <div class="spinner"></div>
+                                <div>
+                                    <h3>Optimizing Production Schedule</h3>
+                                    <p id="progress-text">Initializing...</p>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results View -->
+                <div id="results-view" class="view">
+                    <div class="view-header">
+                        <h2>Optimization Results</h2>
+                        <p>View and download production schedules</p>
+                    </div>
+
+                    <div id="results-container">
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            <h3>No Results Yet</h3>
+                            <p>Run an optimization to see results here</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SAP Data View -->
+                <div id="sap-view" class="view">
+                    <div class="view-header">
+                        <h2>SAP S/4HANA Data</h2>
+                        <p>View and manage SAP master data</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>SAP Data Structure</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="sap-info-grid">
+                                <div class="sap-info-card">
+                                    <div class="info-icon">📦</div>
+                                    <h4>Material Master (MARA/MARC)</h4>
+                                    <p>Product definitions with costs</p>
+                                </div>
+                                <div class="sap-info-card">
+                                    <div class="info-icon">📊</div>
+                                    <h4>Inventory (MARD)</h4>
+                                    <p>Stock levels by location</p>
+                                </div>
+                                <div class="sap-info-card">
+                                    <div class="info-icon">🏭</div>
+                                    <h4>Work Centers (CRHD)</h4>
+                                    <p>Production resources</p>
+                                </div>
+                                <div class="sap-info-card">
+                                    <div class="info-icon">🔧</div>
+                                    <h4>BOM (STKO/STPO)</h4>
+                                    <p>Bill of Materials</p>
+                                </div>
+                                <div class="sap-info-card">
+                                    <div class="info-icon">⚙️</div>
+                                    <h4>Routing (PLKO/PLPO)</h4>
+                                    <p>Production operations</p>
+                                </div>
+                                <div class="sap-info-card">
+                                    <div class="info-icon">📋</div>
+                                    <h4>Demands</h4>
+                                    <p>Customer orders</p>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="btn btn-primary" id="view-sample-sap">
+                                    View Sample SAP Data
+                                </button>
+                                <button class="btn btn-secondary" id="download-template">
+                                    Download Template
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="sap-data-display" style="display: none;">
+                        <div class="card-header">
+                            <h3>SAP Data Preview</h3>
+                            <button class="btn btn-icon" id="close-sap-data">✕</button>
+                        </div>
+                        <div class="card-body">
+                            <pre id="sap-data-content"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule View -->
+                <div id="schedule-view" class="view">
+                    <div class="view-header">
+                        <h2>Production Schedule</h2>
+                        <p>Day-wise production plan with shift details</p>
+                    </div>
+
+                    <div id="schedule-container">
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            <h3>No Schedule Available</h3>
+                            <p>Run an optimization to generate a production schedule</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
